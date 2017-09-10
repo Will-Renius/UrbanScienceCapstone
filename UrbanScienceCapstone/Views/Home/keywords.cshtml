@@ -1,0 +1,29 @@
+﻿<div class="form-horizontal">
+
+    <hr />
+
+    <div class="form-group">
+        @*@Html.DisplayNameFor(model => model.documents)*@
+
+        <table class="table table-responsive" style="width:400px">
+                <tr>
+                    <th>
+                        Keywords
+                    </th>
+                    
+                </tr>
+
+                @foreach (var item in ViewBag.keyPhrases)
+                {
+                    <tr>
+                        <td>
+                            @item
+                        </td>
+                       
+
+                    </tr>
+                }
+
+            </table>
+    </div>
+</div> 
