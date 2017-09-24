@@ -44,55 +44,18 @@ namespace UrbanScienceCapstone.Controllers
             {
                 //TODO: SubscribeUser(model.Email);
             }
+            //this is where we want to hit our API to identify keywords.
+
+            //for some reason if I call our client from this function it says: "Search not found"
+            // My assumption is that this funtion is the one that takes it to the new page
+            //      so leaving for now
             return RedirectToAction("Keywords", "Home", new { search = model.search });
 
         }
 
         public async Task<ActionResult> Keywords(string search)
         {
-            List<Document> documents = new List<Document>();
-            documents.Add(new Document() { language = "en", id = "1", text = search});
-
-            List<Keywords> KeywordInfo = new List<Keywords>();
-            var client = new HttpClient();
-
-            // Request headers
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
-
-            HttpResponseMessage response;
-
-            // Compose request.
-            string body = "";
-            foreach (Document doc in documents)
-            {
-                if (!string.IsNullOrEmpty(body))
-                {
-                    body = body + ",";
-                }
-
-                body = body + "{ \"language\": \"" + doc.language + "\", \"id\":\"" + doc.id + "\",  \"text\": \"" + doc.text + "\"   }";
-            }
-
-            body = "{  \"documents\": [" + body + "] }";
-
-            // Request body
-            byte[] byteData = Encoding.UTF8.GetBytes(body);
-
-            using (var content = new ByteArrayContent(byteData))
-            {
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                response = await client.PostAsync(uriBase, content);
-            }
-
-            // Get the JSON response
-            string result = await response.Content.ReadAsStringAsync();
-            JObject result2 = JObject.Parse(result);
-            //Deserializing the response recieved from web api and storing into the Employee list 
-            RootObject testdes = new RootObject();
-
-            //testdes = JsonConvert.DeserializeObject<RootObject>(result);
-            testdes = result2.ToObject<RootObject>();
-            ViewBag.keyPhrases = testdes.documents[0].keyPhrases;
+            ViewBag.keyPhrases = VirtualDealershipAdviserClient.Keywords(search).Result;
             return View();
         }
     }
