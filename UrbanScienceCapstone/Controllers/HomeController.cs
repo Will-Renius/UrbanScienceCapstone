@@ -17,13 +17,6 @@ using Newtonsoft.Json.Linq;
 
 namespace UrbanScienceCapstone.Controllers
 {
-    struct Document
-    {
-        public string language;
-        public string id;
-        public string text;
-    }
-
     public class HomeController : Controller
     {
         const string subscriptionKey = "fc2944a69ec44b03939f48cf7a7a0ad3";
@@ -33,10 +26,9 @@ namespace UrbanScienceCapstone.Controllers
         //swtichted iactionresult to ation result, may want to switch back
         public ActionResult Index()
         {
-
-            
             return View();
         }
+
         [HttpPost]
         public ActionResult Search(Search model)
         {
