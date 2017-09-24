@@ -1,0 +1,28 @@
+﻿<div class=" center">
+
+
+    <div class="card" style=" border-color: #333;">
+        <div class="card-block">
+            <h3 class="card-title">@ViewBag.action.text</h3>
+            <p class="card-text">your @ViewBag.kpi_name has a value of @ViewBag.kpi_value</p>
+            <a href="#" class="btn btn-primary">Take action</a>
+        </div>
+    </div>
+
+    <div class="row">
+
+        @foreach (var kpi in ViewBag.kpi_list)
+        {
+
+
+            <div class="col-sm-6">
+                <h4>@kpi.name</h4>
+            </div>
+            <div class="col-sm-6">
+                <h4>@kpi.value</h4>
+            </div>
+
+        }
+
+    </div>
+</div>

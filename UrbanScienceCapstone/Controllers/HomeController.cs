@@ -40,11 +40,62 @@ namespace UrbanScienceCapstone.Controllers
         [HttpPost]
         public ActionResult Search(Search model)
         {
-            if (ModelState.IsValid)
+            // here is where we'll call our kpi relevence from the web api
+            // we'll send it our model.search and it will return JSON
+            // might have trouble with asynch since we have to wait for api call, not sure if we can return a redirect
+            string test_json = "{'kpi_list': [{'name': 'sales effectiveness', 'value': 10, 'priority': 0.87}, {'name': 'pump in', 'value':20, 'priority': 0.67}]}";
+            JObject return_json = JObject.Parse(test_json);
+            KpiList kpi_list_object = new KpiList();
+            kpi_list_object = return_json.ToObject<KpiList>();
+
+            TempData["kpi_list"] = JsonConvert.SerializeObject(kpi_list_object);
+            
+
+            return RedirectToAction("KPI", "Home", new { test = "hello world" });
+
+        }
+
+        public ActionResult KPI(string test)
+        {
+            //if (TempData["kpi_list"] == null)
+            //{
+
+            //   throw some error
+            //}
+            // re-assign tempdata
+            TempData["kpi_list"] = TempData["kpi_list"].ToString();
+
+            KpiList kpi_list_object = JsonConvert.DeserializeObject<KpiList>(TempData["kpi_list"].ToString());
+            ViewBag.kpi_list = kpi_list_object.kpi_list;
+            return View();
+
+
+        }
+        public ActionResult ActionResponse(string kpi_name, int kpi_value)
+        {
+            // we should still have kpi_list stored in session
+            if (TempData["kpi_list"] != null)
             {
-                //TODO: SubscribeUser(model.Email);
+                KpiList kpi_list_object = JsonConvert.DeserializeObject<KpiList>(TempData["kpi_list"].ToString());
+                ViewBag.kpi_list = kpi_list_object.kpi_list;
             }
-            return RedirectToAction("Keywords", "Home", new { search = model.search });
+            else
+            {
+                ViewBag.kpi_list = new List<Kpi>();
+            }
+
+            //KpiList kpi_list_object = JsonConvert.DeserializeObject<KpiList>(TempData["kpi_list"].ToString());
+
+            // call web api to get action sending it kpi information
+            // might want to add more values in action so assuming json
+            string action_sample = "{'text' : 'increase inventory'}";
+            KpiAction action_to_take = JsonConvert.DeserializeObject<KpiAction>(action_sample);
+            //
+            ViewBag.action = action_to_take;
+            ViewBag.kpi_name = kpi_name;
+            ViewBag.kpi_value = kpi_value;
+            return View();
+
 
         }
 

@@ -1,0 +1,23 @@
+﻿
+
+<h1>Select a potential area for improvement</h1>
+
+
+    @foreach (var kpi in ViewBag.kpi_list)
+    {
+        <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = kpi.name, kapi_value = kpi.value })">
+        <div class="row">
+           
+
+            <div class="col-sm-6">
+                <h4>@kpi.name</h4>
+            </div>
+            <div class="col-sm-6">
+                <h4>@kpi.value</h4>
+            </div>
+
+        </div>
+        </a>
+    }
+
+        
