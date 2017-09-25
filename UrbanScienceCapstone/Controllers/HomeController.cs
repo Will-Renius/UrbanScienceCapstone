@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-//non default
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Web;
 using Newtonsoft.Json;
-using UrbanScienceCapstone.Models;
 using Newtonsoft.Json.Linq;
+//non default
+using UrbanScienceCapstone.Models;
 
 
 
@@ -19,7 +20,7 @@ namespace UrbanScienceCapstone.Controllers
 {
     public class HomeController : Controller
     {
-        const string subscriptionKey = "fc2944a69ec44b03939f48cf7a7a0ad3";
+        const string urlBase = "http://localhost:65007/api/keywords";
 
         // GET: /<controller>/
         //swtichted iactionresult to ation result, may want to switch back
@@ -35,7 +36,6 @@ namespace UrbanScienceCapstone.Controllers
             {
                 //TODO: SubscribeUser(model.Email);
             }
-            //this is where we want to hit our API to identify keywords.
 
             //for some reason if I call our client from this function it says: "Search not found"
             // My assumption is that this funtion is the one that takes it to the new page
@@ -46,7 +46,32 @@ namespace UrbanScienceCapstone.Controllers
 
         public async Task<ActionResult> Keywords(string search)
         {
-            ViewBag.keyPhrases = VirtualDealershipAdviserClient.Keywords(search).Result;
+            try
+            {
+                string url = urlBase + "?query=" + Uri.EscapeDataString(search);
+
+                var client = new HttpClient();
+
+                client.DefaultRequestHeaders.Accept.Clear();
+                //add any default headers below this
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage response = await client.GetAsync(url);
+                //Convert into keywords
+                string json_string = await response.Content.ReadAsStringAsync();
+                List<string> keywords = JsonConvert.DeserializeObject<List<string>>(json_string);
+
+                if (keywords.Count == 0)
+                {
+                    keywords.Add("No keywords identified");
+                }
+                ViewBag.keyPhrases = keywords;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
             return View();
         }
     }
