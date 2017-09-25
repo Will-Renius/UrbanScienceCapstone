@@ -20,7 +20,6 @@ namespace UrbanScienceCapstone.Controllers
     public class HomeController : Controller
     {
         const string subscriptionKey = "fc2944a69ec44b03939f48cf7a7a0ad3";
-        const string uriBase = "https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/keyPhrases";
 
         // GET: /<controller>/
         //swtichted iactionresult to ation result, may want to switch back

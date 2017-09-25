@@ -1,14 +1,22 @@
-﻿@*@model UrbanScienceCapstone.Models.RootObject;*@
+﻿
 
-@{
-    ViewBag.Title = "www.compilemode.com";
-}
-@model UrbanScienceCapstone.Models.Search
+<body>
+    <div class="center">
+        @{
+            ViewBag.Title = "www.compilemode.com";
+        }
+        <img id="img_logo" alt="logo" src="~/images/urban_science.jpg" />
+        <h1>Welcome to the Virtual Dealership Advisor!</h1>
 
-@using (Html.BeginForm("Search", "Home", FormMethod.Post))
-{
-    @Html.TextBoxFor(model => model.search)
-    @Html.ValidationMessageFor(model => model.search)
-    <button type="submit">Search</button>
-}
+        @model UrbanScienceCapstone.Models.Search
+        @using (Html.BeginForm("Search", "Home", FormMethod.Post))
+        {
+            @Html.TextBoxFor(model => model.search, new { @class = "form-control text-box col-xs-2" })
+            @Html.ValidationMessageFor(model => model.search)
 
+          
+            <button type="submit" class="btn btn-success">Search</button>
+
+        }
+    </div>
+</body>
