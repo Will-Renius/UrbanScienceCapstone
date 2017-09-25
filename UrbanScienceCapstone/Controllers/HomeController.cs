@@ -177,7 +177,7 @@ namespace UrbanScienceCapstone.Controllers
             // My assumption is that this funtion is the one that takes it to the new page
             //      so leaving for now
             return RedirectToAction("Keywords", "Home", new { search = model.search });
-             * /
+             */
 
 
         }
@@ -230,7 +230,10 @@ namespace UrbanScienceCapstone.Controllers
             return View();
         }
 
-       
+        public ActionResult speechRecognition()
+        {
+            return View();
+        }
         public ActionResult SpeechToText(string file_url)
         {
             //args[0] = "https://speech.platform.bing.com/recognize";
