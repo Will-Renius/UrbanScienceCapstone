@@ -33,6 +33,7 @@ namespace UrbanScienceCapstone.Controllers
     {
         const string subscriptionKey = "fc2944a69ec44b03939f48cf7a7a0ad3";
         const string uriBase = "http://localhost:65007/api/keywords";
+
         // GET: /<controller>/
         //swtichted iactionresult to ation result, may want to switch back
         public ActionResult Index()
@@ -58,18 +59,37 @@ namespace UrbanScienceCapstone.Controllers
 
         }
 
-        public ActionResult KPI(string test)
+        public async Task<ActionResult> KPI(string search)
         {
-            //if (TempData["kpi_list"] == null)
-            //{
+            string uriBase2 = "http://localhost:65007/api/testKpi";
+            //string uriBase2 = "http://virtualdealershipadvisorapi.azurewebsites.net/api/testKpi";
+            try
+            {
+                string url = uriBase2 + "?query=" + Uri.EscapeDataString(search);
+                //string url = uriBase2;
+                var client = new HttpClient();
 
-            //   throw some error
-            //}
-            // re-assign tempdata
-            TempData["kpi_list"] = TempData["kpi_list"].ToString();
+                client.DefaultRequestHeaders.Accept.Clear();
+                //add any default headers below this
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/json"));
 
-            KpiList kpi_list_object = JsonConvert.DeserializeObject<KpiList>(TempData["kpi_list"].ToString());
-            ViewBag.kpi_list = kpi_list_object.kpi_list;
+                HttpResponseMessage response = await client.GetAsync(url);
+                string json_string = await response.Content.ReadAsStringAsync();
+                //Kpi testKpi = JsonConvert.DeserializeObject<Kpi>(json_string);
+
+
+                //ViewBag.testKpi = testKpi;
+                KpiList kpi_list_object = JsonConvert.DeserializeObject<KpiList>(json_string);
+                ViewBag.kpi_list = kpi_list_object.kpi_list;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+            }
+
+            
             return View();
 
 
@@ -143,7 +163,8 @@ namespace UrbanScienceCapstone.Controllers
         }
         public async Task<ActionResult> TestKPI(string search)
         {
-            string uriBase2 = "http://localhost:65007/api/testKpi";
+            //string uriBase2 = "http://localhost:65007/api/testKpi";
+            string uriBase2 = "http://virtualdealershipadvisorapi.azurewebsites.net/api/values";
             try
             {
                 string url = uriBase2 + "?query=" + Uri.EscapeDataString(search);
