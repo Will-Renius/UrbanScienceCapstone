@@ -61,8 +61,8 @@ namespace UrbanScienceCapstone.Controllers
 
         public async Task<ActionResult> KPI(string search)
         {
-            string uriBase2 = "http://localhost:65007/api/kpi";
-            //string uriBase2 = "http://virtualdealershipadvisorapi.azurewebsites.net/api/kpi";
+            //string uriBase2 = "http://localhost:65007/api/kpi";
+            string uriBase2 = "http://virtualdealershipadvisorapi.azurewebsites.net/api/kpi";
             try
             {
                 string url = uriBase2 + "?query=" + Uri.EscapeDataString(search);
@@ -163,8 +163,8 @@ namespace UrbanScienceCapstone.Controllers
         }
         public async Task<ActionResult> TestKPI(string search)
         {
-            //string uriBase2 = "http://localhost:65007/api/testKpi";
-            string uriBase2 = "http://virtualdealershipadvisorapi.azurewebsites.net/api/values";
+            //string uriBase2 = "http://localhost:65007/api/Kpi";
+            string uriBase2 = "http://virtualdealershipadvisorapi.azurewebsites.net/api/kpi";
             try
             {
                 string url = uriBase2 + "?query=" + Uri.EscapeDataString(search);
