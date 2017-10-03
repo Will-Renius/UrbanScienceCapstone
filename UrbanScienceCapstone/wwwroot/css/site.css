@@ -43,3 +43,9 @@
     margin: 30px 0 15px 0;
 
 }
+.kpi-item{
+    background-color: #1ab2b2;
+    border-radius: 15px;
+    border-color: #808080;
+    border-width: 3px;
+}

@@ -25,6 +25,10 @@ namespace UrbanScienceCapstone.Models
     public class KpiList
     {
         public List<Kpi> kpi_list { get; set; }
+        public KpiList()
+        {
+            kpi_list = new List<Kpi>();
+        }
     }
     public class Kpi
     {
