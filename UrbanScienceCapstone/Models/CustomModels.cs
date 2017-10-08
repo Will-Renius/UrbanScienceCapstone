@@ -34,11 +34,15 @@ namespace UrbanScienceCapstone.Models
     {
         public string name { get; set; }
         public int  value { get; set; }
-        public double priority { get; set; }
+        public double p_val { get; set; }
+        public string segment { get; set; }
+        public string brand { get; set; }
     }
     public class KpiAction
     {
-        public string text { get; set; }
+        public string actionP { get; set; }
+        public string kpi { get; set; }
+        public string type { get; set; }
     }
     public class Search
     {
