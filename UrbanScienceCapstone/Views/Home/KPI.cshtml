@@ -4,12 +4,13 @@
 <br />
 <hr />
 <br />
-<h2>Most relevant KPI</h2>
-<br />
-<hr />
-<br />
+
 @if (ViewBag.most_related_kpi != null)
 {
+    <h2>Is this what you were looking for?</h2>
+    <br />
+    <hr />
+    <br />
     <div class=" center">
         <div class="card border-success mb-3" style="max-width: 20rem;">
             <div class="card-header">@ViewBag.most_related_kpi.name</div>
@@ -26,73 +27,73 @@
 }
 else
 {
-    <h2> We couldn't find a relevant KPI for your question</h2>
+    <p>We couldn't find what you were looking for. See below to view your most needed areas of improvement, or try re-phrasing your question</p>
+
 }
-<br />
-<hr />
-<br />
-<center>
-    <h3>Not what you were looking for? Click Try Again to re-phrase your question or look below for your most needed improvements</h3>
-    <a href="@Url.Action("Index", "Home")" class="btn btn-outline btn-info">Try Again</a>
-</center>
+
 <br />
 <hr />
 <br />
 @if (ViewBag.needed_kpi_list != null)
 {
-    <div class="center">
-        <div class="card-columns">
-            @foreach (var kpi in ViewBag.needed_kpi_list)
+            @foreach (var @kpi in ViewBag.needed_kpi_list)
             {
-                //we should switch out for conditional on value dan calculates
-                @if (kpi.value < 30)
-                {
-                    <div class="card border-danger mb-3" style="max-width: 20rem;">
-                        <div class="card-header">kpi.name</div>
-                        <div class="card-body">
-                            <h4 class="card-title">kpi.value</h4>
-                            <p class="card-text">You are doing far below average on this measurement. Click the button below to view actions you can take to improve your @kpi.name</p>
-                            <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = kpi.name, kpi_value = kpi.value })" class="btn btn-outline btn-danger">View Actions</a>
-                        </div>
-                    </div>
+                <div class="col-md-4" style="float:left">
 
-                }
-                else if (kpi.value < 50)
-                {
-                    <div class="card border-warning mb-3" style="max-width: 20rem;">
-                        <div class="card-header">kpi.name</div>
-                        <div class="card-body">
-                            <h4 class="card-title">kpi.value</h4>
-                            <p class="card-text">You are doing far below average on this measurement. Click the button below to view actions you can take to improve your kpi.name</p>
-                            <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = kpi.name, kpi_value = kpi.value })" class="btn btn-outline btn-warning">View Actions</a>
+                    @if (@kpi.p_val < 0.2)
+                    {
+                        <div class="card border-danger mb-3" style="max-width: 20rem;">
+                            <div class="card-header">@kpi.brand @kpi.segment @kpi.name</div>
+                            <div class="card-body">
+                                <h4 class="card-title">@kpi.value</h4>
+                                <h6 class="card-subtitle mb-2 text-muted">@string.Format("kpi percentile {0:0.0%}", kpi.p_val)</h6>
+                                <p class="card-text">You are doing far below average on this measurement. Click the button below to view actions you can take to improve your @kpi.name</p>
+                                <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @kpi.name, kpi_value = @kpi.value })" class="btn btn-outline btn-danger">View Actions</a>
+                            </div>
                         </div>
-                    </div>
 
-                }
-                else
-                {
-                    <div class="card border-success mb-3" style="max-width: 20rem;">
-                        <div class="card-header">kpi.name</div>
-                        <div class="card-body">
-                            <h4 class="card-title">kpi.value</h4>
-                            <p class="card-text">You are performing above average in this measurement. However, you can always find ways to improve. Click the button below to view actions you can take to improve your kpi.name</p>
-                            <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = kpi.name, kpi_value = kpi.value })" class="btn btn-outline btn-success">View Actions</a>
+                    }
+                    else if (@kpi.p_val < 0.5)
+                    {
+                        <div class="card border-warning mb-3" style="max-width: 20rem;">
+                            <div class="card-header">@kpi.name</div>
+                            <div class="card-body">
+                                <h4 class="card-title">@kpi.value</h4>
+                                <p class="card-text">You are doing far below average on this measurement. Click the button below to view actions you can take to improve your kpi.name</p>
+                                <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @kpi.name, kpi_value = @kpi.value })" class="btn btn-outline btn-warning">View Actions</a>
+                            </div>
                         </div>
-                    </div>
 
-                }
+                    }
+                    else
+                    {
+                        <div class="card border-success mb-3" style="max-width: 20rem;">
+                            <div class="card-header">@kpi.name</div>
+                            <div class="card-body">
+                                <h4 class="card-title">@kpi.value</h4>
+                                <p class="card-text">You are performing above average in this measurement. However, you can always find ways to improve. Click the button below to view actions you can take to improve your kpi.name</p>
+                                <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @kpi.name, kpi_value = @kpi.value })" class="btn btn-outline btn-success">View Actions</a>
+                            </div>
+                        </div>
+
+                    }
+                
+                </div>
             }
-        </div>
+    <div style="clear:both">
+
     </div>
+    <br />
+    <hr />
+    <br />
+  }
+    <center>
+        <h3>Not what you were looking for? Click Try Again to re-phrase your question or look below for your most needed improvements</h3>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-outline btn-info">Try Again</a>
+    </center>
 
-}
-else
-{
-<h2>
-    we don't have this implemented yet, but when it is it will look like this
-</h2>
 
-}
+
 
 
 

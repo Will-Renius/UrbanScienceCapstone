@@ -3,24 +3,38 @@
 <div class="center">
     @if(ViewBag.kpi_value < 50) { 
         <h2>You are performing poorly on @ViewBag.kpi_name</h2>
+        <br />
+        <hr />
+        <br />
         <p>Look at the actions below for tips on improving your performance</p>
     }else{ 
         <h2>You are performing well in @ViewBag.kpi_name</h2>
+        <br />
+        <hr />
+        <br />
         <p>Improvements can still be made, look at the actions below for tips on improving your performance </p>
     }
     <div class="center">
-        @foreach (var action in ViewBag.action_list)
-        {
-            <div class="card border-info mb-3" style="max-width: 20rem;">
-                <div class="card-header">@ViewBag.kpi_name</div>
-                <div class="card-body">
-                    <h4 class="card-title">@ViewBag.kpi_value</h4>
-                    <p class="card-text">your @ViewBag.kpi_name has a value of @ViewBag.kpi_value. @action.text</p>
-                    <a href="@Url.Action("Index", "Home")" class="btn btn-outline btn-info">Search Again</a>
+        <div>
+            @{ var count = 1; }
+            @foreach (var action in ViewBag.action_list)
+            {
+                <div class="col-md-4" style="float:left">
+                    <div class="card border-info mb-3" style="max-width: 20rem;">
+                        <div class="card-block">
+                            <div class="card-header">Action @count</div>
+                            <div class="card-body">
+                                <p class="card-text">Your @ViewBag.kpi_name has a value of @ViewBag.kpi_value. @action.actionP</p>
+                                <a href="@Url.Action("Index", "Home")" class="btn btn-outline btn-info">Search Again</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        }
-    </div>
+
+                count = count + 1;
+            }
+        </div>
+     </div>
 </div>
 
     

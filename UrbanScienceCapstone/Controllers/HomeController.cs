@@ -31,9 +31,8 @@ namespace UrbanScienceCapstone.Controllers
 
     public class HomeController : Controller
     {
-        const string subscriptionKey = "dadc20b8bf47462bb82321e581b795c6";
+        const string subscriptionKey = "fc2944a69ec44b03939f48cf7a7a0ad3";
         const string uriBase = "http://localhost:65007/api/keywords";
-       // const string uriBase = "http://localhost:58578/api/keywords";
 
         // GET: /<controller>/
         //swtichted iactionresult to ation result, may want to switch back
@@ -63,9 +62,8 @@ namespace UrbanScienceCapstone.Controllers
         public async Task<ActionResult> KPI(string search)
         {
             //get the most related kpi
-            string related_kpi_url = "http://localhost:65007/api/RelatedKpi";
-            //string related_kpi_url = "http://localhost:58578/api/RelatedKpi";
-            //string related_kpi_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/kpi";
+            //string related_kpi_url = "http://localhost:65007/api/RelatedKpi";
+            string related_kpi_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/RelatedKpi";
             try
             {
                 string url = related_kpi_url + "?query=" + Uri.EscapeDataString(search);
@@ -92,59 +90,82 @@ namespace UrbanScienceCapstone.Controllers
                 Console.WriteLine(e.Message);
 
             }
-            // get the most needed kpi_list
-            // delete when dan is done
-            KpiList most_needed_kpis = new KpiList();
 
-            Kpi test_kpi1 = new Kpi();
-            test_kpi1.name = "Sales Effectiveness";
-            test_kpi1.value = 20;
-            most_needed_kpis.kpi_list.Add(test_kpi1);
 
-            Kpi test_kpi2 = new Kpi();
-            test_kpi2.name = "Pump In";
-            test_kpi2.value = 30;
-            most_needed_kpis.kpi_list.Add(test_kpi2);
+            // call web api to get action sending it kpi information
+            //string needed_kpi_api_url = "http://localhost:65007/api/NeededKpi";
+            string needed_kpi_api_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/NeededKpi";
+            List<Kpi> most_needed_kpis = new List<Kpi>();
+            try
+            {
+                string url = $"{needed_kpi_api_url}?dealer_name={Uri.EscapeDataString("omega")}";
+                //string url = uriBase2;
+                var client = new HttpClient();
 
-            Kpi test_kpi3 = new Kpi();
-            test_kpi2.name = "Dealer Share";
-            test_kpi2.value = 35;
-            most_needed_kpis.kpi_list.Add(test_kpi3);
+                client.DefaultRequestHeaders.Accept.Clear();
+                //add any default headers below this
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/json"));
 
-            ViewBag.needed_kpi_list = most_needed_kpis.kpi_list;
+                HttpResponseMessage response = await client.GetAsync(url);
+                string json_string = await response.Content.ReadAsStringAsync();
+                //Kpi testKpi = JsonConvert.DeserializeObject<Kpi>(json_string);
+
+
+                //ViewBag.testKpi = testKpi;
+
+                most_needed_kpis = JsonConvert.DeserializeObject<List<Kpi>>(json_string);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+            }
+
+            ViewBag.needed_kpi_list = most_needed_kpis;
             return View();
 
 
         }
-        public ActionResult ActionResponse(string kpi_name, int kpi_value)
+        public async Task<ActionResult> ActionResponse(string kpi_name, int kpi_value)
         {
-            
+
 
             //KpiList kpi_list_object = JsonConvert.DeserializeObject<KpiList>(TempData["kpi_list"].ToString());
 
             // call web api to get action sending it kpi information
-            // might want to add more values in action so assuming json
-            string action_sample = "{'text' : 'increase inventory'}";
-            KpiAction action_to_take = JsonConvert.DeserializeObject<KpiAction>(action_sample);
+            //string action_api_url = "http://localhost:65007/api/Actions";
+            string action_api_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/Actions";
+            List<KpiAction> actions_to_take = new List<KpiAction>();
+            try
+            {
+                string url = $"{action_api_url}?name={Uri.EscapeDataString(kpi_name)}&value={kpi_value}";
+                //string url = uriBase2;
+                var client = new HttpClient();
+
+                client.DefaultRequestHeaders.Accept.Clear();
+                //add any default headers below this
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage response = await client.GetAsync(url);
+                string json_string = await response.Content.ReadAsStringAsync();
+                //Kpi testKpi = JsonConvert.DeserializeObject<Kpi>(json_string);
+
+
+                //ViewBag.testKpi = testKpi;
+
+                actions_to_take = JsonConvert.DeserializeObject<List<KpiAction>>(json_string);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+            }
             //
-            List<KpiAction> action_list = new List<KpiAction>();
-            KpiAction action1 = new KpiAction();
-            action1.text = "Your sales[for this segment /in this area / etc] are good.Use Premium MMO to take a look at your sales effectiveness to determine the level of additional opportunity.";
-            action_list.Add(action1);
+            
 
-            KpiAction action2 = new KpiAction();
-            action2.text = "Evaluate Dealer Business Intelligence to determine how your profit compares to other dealers.";
-            action_list.Add(action2);
-
-            KpiAction action3 = new KpiAction();
-            action3.text = "Leverage Sales Leads to find additional interest in your area.";
-            action_list.Add(action3);
-
-            KpiAction action4 = new KpiAction();
-            action4.text = "Optimize your inventory mix to meet consumer demand in your area.";
-            action_list.Add(action4);
-
-            ViewBag.action_list = action_list;
+            ViewBag.action_list = actions_to_take;
             ViewBag.kpi_name = kpi_name;
             ViewBag.kpi_value = kpi_value;
             return View();
@@ -194,7 +215,6 @@ namespace UrbanScienceCapstone.Controllers
         public async Task<ActionResult> TestKPI(string search)
         {
             //string uriBase2 = "http://localhost:65007/api/Kpi";
-            //string uriBase2 = "http://localhost:58578/api/kpi";
             string uriBase2 = "http://virtualdealershipadvisorapi.azurewebsites.net/api/kpi";
             try
             {
