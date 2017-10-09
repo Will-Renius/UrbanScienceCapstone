@@ -90,11 +90,11 @@ namespace UrbanScienceCapstone.Controllers
                 Console.WriteLine(e.Message);
 
             }
-  
+
 
             // call web api to get action sending it kpi information
-            string needed_kpi_api_url = "http://localhost:65007/api/NeededKpi";
-            //string related_kpi_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/NeededKpi"";
+            //string needed_kpi_api_url = "http://localhost:65007/api/NeededKpi";
+            string needed_kpi_api_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/NeededKpi";
             List<Kpi> most_needed_kpis = new List<Kpi>();
             try
             {
@@ -134,8 +134,8 @@ namespace UrbanScienceCapstone.Controllers
             //KpiList kpi_list_object = JsonConvert.DeserializeObject<KpiList>(TempData["kpi_list"].ToString());
 
             // call web api to get action sending it kpi information
-            string action_api_url = "http://localhost:65007/api/Actions";
-            //string related_kpi_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/Actions";
+            //string action_api_url = "http://localhost:65007/api/Actions";
+            string action_api_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/Actions";
             List<KpiAction> actions_to_take = new List<KpiAction>();
             try
             {
