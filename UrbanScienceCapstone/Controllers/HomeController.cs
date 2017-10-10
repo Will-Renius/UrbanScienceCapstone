@@ -31,8 +31,14 @@ namespace UrbanScienceCapstone.Controllers
 
     public class HomeController : Controller
     {
-        const string subscriptionKey = "fc2944a69ec44b03939f48cf7a7a0ad3";
+        const string subscriptionKey = "dadc20b8bf47462bb82321e581b795c6";
         const string uriBase = "http://localhost:65007/api/keywords";
+
+        public ActionResult Login()
+        {
+            return View();
+        }
+
 
         // GET: /<controller>/
         //swtichted iactionresult to ation result, may want to switch back

@@ -42,6 +42,10 @@ namespace UrbanScienceCapstone
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
+                    name: "login",
+                    template: "{controller=Login}/{action=Login}"
+                );
+                routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
