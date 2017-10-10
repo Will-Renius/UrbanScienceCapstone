@@ -39,6 +39,19 @@ namespace UrbanScienceCapstone.Controllers
             return View();
         }
 
+        [HttpPost]
+        public ActionResult VerifyLogin([FromBody] string dealerid, [FromBody] string password)
+        {
+            if(dealerid.Equals("Alpha"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Home");
+            }
+        }
+
 
         // GET: /<controller>/
         //swtichted iactionresult to ation result, may want to switch back

@@ -46,6 +46,10 @@ namespace UrbanScienceCapstone
                     template: "{controller=Login}/{action=Login}"
                 );
                 routes.MapRoute(
+                    name: "verifylogin",
+                    template: "{controller=Home}/{action=verifylogin}"
+                );
+                routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
