@@ -10,6 +10,7 @@ using System.Text;
 using Newtonsoft.Json;
 using UrbanScienceCapstone.Models;
 using Newtonsoft.Json.Linq;
+using System.Web;
 //speech to text
 using System.Net;
 using System.IO;
@@ -40,15 +41,26 @@ namespace UrbanScienceCapstone.Controllers
         }
 
         [HttpPost]
-        public ActionResult VerifyLogin([FromBody] string dealerid, [FromBody] string password)
+        public ActionResult VerifyLogin(LoginInfo info)
         {
-            if(dealerid.Equals("Alpha"))
+            //we will be receiving Content-Type = application/x-www-form-urlencoded
+            //https://docs.microsoft.com/en-us/aspnet/web-api/overview/advanced/sending-html-form-data-part-1
+            //https://www.exceptionnotfound.net/asp-net-mvc-demystified-modelstate/
+
+            if(ModelState.IsValid && info != null)
             {
-                return RedirectToAction("Index", "Home");
+                if (info.dealerid.Equals("Alpha"))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Home");
+                }
             }
             else
             {
-                return RedirectToAction("Login", "Home");
+                return BadRequest();
             }
         }
 

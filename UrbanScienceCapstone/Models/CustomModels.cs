@@ -48,4 +48,10 @@ namespace UrbanScienceCapstone.Models
     {
         public string search { get; set; }
     }
+
+    public class LoginInfo
+    {
+        public string dealerid { get; set; }
+        public string password { get; set; }
+    }
 }
