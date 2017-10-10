@@ -49,14 +49,36 @@ namespace UrbanScienceCapstone.Controllers
 
             if(ModelState.IsValid && info != null)
             {
-                if (info.dealerid.Equals("Alpha"))
+                //just copied code below calling needed kpis, definitely refactor
+                string needed_kpi_api_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/NeededKpi";
+                List<Kpi> most_needed_kpis = new List<Kpi>();
+                try
                 {
-                    return RedirectToAction("Index", "Home");
+                    string url = $"{needed_kpi_api_url}?dealer_name={Uri.EscapeDataString(info.dealerid)}";
+                    var client = new HttpClient();
+
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    //add any default headers below this
+                    client.DefaultRequestHeaders.Accept.Add(
+                        new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    HttpResponseMessage response = client.GetAsync(url).Result;
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Login", "Home");
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    return RedirectToAction("Login", "Home");
+                    Console.WriteLine(e.Message);
+                    return BadRequest();
                 }
+
             }
             else
             {
