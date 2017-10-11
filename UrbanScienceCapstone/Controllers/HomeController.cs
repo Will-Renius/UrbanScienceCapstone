@@ -94,23 +94,7 @@ namespace UrbanScienceCapstone.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Search(Search model)
-        {
-            // here is where we'll call our kpi relevence from the web api
-            // we'll send it our model.search and it will return JSON
-            // might have trouble with asynch since we have to wait for api call, not sure if we can return a redirect
-            string test_json = "{'kpi_list': [{'name': 'sales effectiveness', 'value': 10, 'priority': 0.87}, {'name': 'pump in', 'value':20, 'priority': 0.67}]}";
-            JObject return_json = JObject.Parse(test_json);
-            KpiList kpi_list_object = new KpiList();
-            kpi_list_object = return_json.ToObject<KpiList>();
 
-            TempData["kpi_list"] = JsonConvert.SerializeObject(kpi_list_object);
-
-
-            return RedirectToAction("KPI", "Home", new { test = "hello world" });
-
-        }
 
         public async Task<ActionResult> KPI(string search)
         {
@@ -151,7 +135,7 @@ namespace UrbanScienceCapstone.Controllers
             List<Kpi> most_needed_kpis = new List<Kpi>();
             try
             {
-                string url = $"{needed_kpi_api_url}?dealer_name={Uri.EscapeDataString("omega")}";
+                string url = $"{needed_kpi_api_url}?dealer_name={Uri.EscapeDataString("Omega")}";
                 //string url = uriBase2;
                 var client = new HttpClient();
 
