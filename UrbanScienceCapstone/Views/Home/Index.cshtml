@@ -1,9 +1,9 @@
 ﻿
 
 <body>
-    <div class="center">
+    <div class="center" style="text-align:center;">
         @{
-            ViewBag.Title = "Virtual Dealership Advisor";
+            ViewBag.Title = "Virtual Dealership Adviser";
         }
         <img id="img_logo" alt="logo" src="~/images/urban_science.jpg" />
         <h1>Welcome to the Virtual Dealership Advisor!</h1>
@@ -15,14 +15,16 @@
             @Html.TextBoxFor(model => model.search, new { @id = "searchbox", @class = "form-control text-box col-xs-2" })
             @Html.ValidationMessageFor(model => model.search)
 
-            <button type="button" id="startBtn" class="btn btn-success">
-                <i class="fa fa-microphone" aria-hidden="true"></i>
-            </button>
-            <button type="button" id="stopBtn" class="btn btn-danger">
-                <i class="fa fa-microphone-slash" aria-hidden="true"></i>
-            </button>
-            <button type="submit" class="btn btn-success">Search</button>
+            <div class="search-buttons" style="margin-top:15px">     
 
+                <button type="button" id="startBtn" class="btn btn-success">
+                    <i class="fa fa-microphone" aria-hidden="true"></i>
+                </button>
+                <button type="button" id="stopBtn" class="btn btn-danger">
+                    <i class="fa fa-microphone-slash" aria-hidden="true"></i>
+                </button>
+                <button type="submit" class="btn btn-success">Search</button>
+            </div>
         }
 
        

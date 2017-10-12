@@ -11,10 +11,10 @@
     <br />
     <hr />
     <br />
-    <div class=" center">
+    <div class="center" style="text-align:center;">
         @if (@ViewBag.most_related_kpi.p_val < 0.2)
         {
-            <div class="card border-danger mb-3" style="max-width: 20rem;">
+            <div class="card border-danger mb-3" style="max-width: 20rem;margin:auto;">
                 <div class="card-header">@ViewBag.most_related_kpi.brand @ViewBag.most_related_kpi.segment @ViewBag.most_related_kpi.name</div>
                 <div class="card-body">
                     <h4 class="card-title">@ViewBag.most_related_kpi.value</h4>
@@ -27,12 +27,12 @@
         }
         else if (@ViewBag.most_related_kpi.p_val < 0.5)
         {
-            <div class="card border-warning mb-3" style="max-width: 20rem;">
+            <div class="card border-warning mb-3" style="max-width: 20rem;margin:auto;">
                 <div class="card-header">@ViewBag.most_related_kpi.name</div>
                 <div class="card-body">
                     <h4 class="card-title">@ViewBag.most_related_kpi.value</h4>
                     <h6 class="card-subtitle mb-2 text-muted">@string.Format("kpi percentile {0:0.0%}", ViewBag.most_related_kpi.p_val)</h6>
-                    <p class="card-text">You are doing far below average on this measurement. Click the button below to view actions you can take to improve your kpi.name</p>
+                    <p class="card-text">You are doing below average on this measurement. Click the button below to view actions you can take to improve your kpi.name</p>
                     <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @ViewBag.most_related_kpi.name, kpi_value = @ViewBag.most_related_kpi.value })" class="btn btn-outline btn-warning">View Actions</a>
                 </div>
             </div>
@@ -40,7 +40,7 @@
         }
         else
         {
-            <div class="card border-success mb-3" style="max-width: 20rem;">
+            <div class="card border-success mb-3" style="max-width: 20rem;margin:auto;">
                 <div class="card-header">@ViewBag.most_related_kpi.name</div>
                 <div class="card-body">
                     <h4 class="card-title">@ViewBag.most_related_kpi.value</h4>
@@ -62,12 +62,12 @@
     </div>
     //btn-lg btn-block
 
-    <p>Look below to see your most needed areas of improvement</p>
+    <p style="text-align:center;">Look below to see your most needed areas of improvement</p>
 
 }
 else
 {
-    <p>We couldn't find what you were looking for. See below to view your most needed areas of improvement, or try re-phrasing your question</p>
+    <p style="text-align:center;"> We couldn't find what you were looking for. See below to view your most needed areas of improvement, or try re-phrasing your question</p>
 
 }
 
@@ -78,7 +78,7 @@ else
 {
             @foreach (var @kpi in ViewBag.needed_kpi_list)
             {
-                <div class="col-md-4" style="float:left">
+                <div class="col-md-4" style="float:left;text-align:center">
 
                     @if (@kpi.p_val < 0.2)
                     {

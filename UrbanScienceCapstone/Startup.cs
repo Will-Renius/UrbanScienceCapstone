@@ -51,7 +51,7 @@ namespace UrbanScienceCapstone
                 );
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Login}");
+                    template: "{controller=Home}/{action=Index}");
             });
         }
     }

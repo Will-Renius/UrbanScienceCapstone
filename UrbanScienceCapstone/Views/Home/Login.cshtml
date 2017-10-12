@@ -4,24 +4,24 @@
 @{
     ViewData["Title"] = "Login";
 }
+<div class="center" style="text-align:center;">
+    <h2>
+        Login
+    </h2>
 
-<h2>
-    Login
-</h2>
-
-<p>
-    Please enter in you're user name and password...
-</p>
+    <p>
+        Please enter in you're user name and password...
+    </p>
 
 
-<form action="~/home/verifylogin" method="post" name="LoginForm">
-    Dealer Id:<br />
-    <input type ="text" name="dealerid" /><br />
-    Password:<br />
-    <input type ="password" name="password"/><br />
-    <input type="submit" />
-</form>
-
+    <form action="~/home/verifylogin" method="post" name="LoginForm">
+        Dealer Id:<br />
+        <input type="text" name="dealerid" /><br />
+        Password:<br />
+        <input type="password" name="password" /><br />
+        <input type="submit" />
+    </form>
+</div>
 <script type="text/javascript">
     $("#LoginForm").submit(function () {
         var jqxhr = $.post('/home/verifylogin', $('#LoginForm').serialize())
