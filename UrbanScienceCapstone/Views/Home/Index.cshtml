@@ -1,13 +1,14 @@
 ﻿
-
 <body>
     <div class="center" style="text-align:center;">
         @{
             ViewBag.Title = "Virtual Dealership Adviser";
         }
+        
+        
         <img id="img_logo" alt="logo" src="~/images/urban_science.jpg" />
-        <h1>Welcome to the Virtual Dealership Advisor!</h1>
-
+        <h1>Welcome to the Virtual Dealership Advisor! Hello @(ViewBag.dealerId as string)</h1>
+        
         @model UrbanScienceCapstone.Models.Search
         @using (Html.BeginForm("KPi", "Home", FormMethod.Post))
         {

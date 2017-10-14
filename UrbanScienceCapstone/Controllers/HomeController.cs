@@ -4,6 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 //non default
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Session; //session state
+using Microsoft.Extensions.Caching.Distributed;
+
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -22,39 +26,35 @@ using System.Threading;
 
 namespace UrbanScienceCapstone.Controllers
 {
-    struct Document
-    {
-        public string language;
-        public string id;
-        public string text;
-    }
-
-
     public class HomeController : Controller
     {
+        //const string uriBase = "http://localhost:65007/api/keywords"; //delete
+
         const string subscriptionKey = "dadc20b8bf47462bb82321e581b795c6";
-        const string uriBase = "http://localhost:65007/api/keywords";
+        const string VDA_API_URL = "http://virtualdealershipadvisorapi.azurewebsites.net/api/";
+
+        const string SessionKeyDealerId = "_DealerId";
+
 
         public ActionResult Login()
         {
             return View();
         }
-
+        //If we make their dealerId persist through multiple sessions, might wanna have this as the default route
         [HttpPost]
-        public ActionResult VerifyLogin(LoginInfo info)
+        public async Task<ActionResult> VerifyLogin(LoginInfo info)
         {
             //we will be receiving Content-Type = application/x-www-form-urlencoded
             //https://docs.microsoft.com/en-us/aspnet/web-api/overview/advanced/sending-html-form-data-part-1
             //https://www.exceptionnotfound.net/asp-net-mvc-demystified-modelstate/
 
-            if(ModelState.IsValid && info != null)
+            if(ModelState.IsValid && string.IsNullOrEmpty(info.dealerid))
             {
                 //just copied code below calling needed kpis, definitely refactor
-                string needed_kpi_api_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/NeededKpi";
                 List<Kpi> most_needed_kpis = new List<Kpi>();
                 try
                 {
-                    string url = $"{needed_kpi_api_url}?dealer_name={Uri.EscapeDataString(info.dealerid)}";
+                    string url = $"{VDA_API_URL}/NeededKpi?dealer_name={Uri.EscapeDataString(info.dealerid)}";
                     var client = new HttpClient();
 
                     client.DefaultRequestHeaders.Accept.Clear();
@@ -62,14 +62,17 @@ namespace UrbanScienceCapstone.Controllers
                     client.DefaultRequestHeaders.Accept.Add(
                         new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    HttpResponseMessage response = client.GetAsync(url).Result;
+                    HttpResponseMessage response = await client.GetAsync(url);
+                    
 
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
+                        HttpContext.Session.SetString(SessionKeyDealerId, info.dealerid);
                         return RedirectToAction("Index", "Home");
                     }
                     else
                     {
+                        string dealer = HttpContext.Session.GetString(SessionKeyDealerId);
                         return RedirectToAction("Login", "Home");
                     }
                 }
@@ -104,7 +107,6 @@ namespace UrbanScienceCapstone.Controllers
             try
             {
                 string url = related_kpi_url + "?query=" + Uri.EscapeDataString(search);
-                //string url = uriBase2;
                 var client = new HttpClient();
 
                 client.DefaultRequestHeaders.Accept.Clear();
@@ -114,10 +116,6 @@ namespace UrbanScienceCapstone.Controllers
 
                 HttpResponseMessage response = await client.GetAsync(url);
                 string json_string = await response.Content.ReadAsStringAsync();
-                //Kpi testKpi = JsonConvert.DeserializeObject<Kpi>(json_string);
-
-
-                //ViewBag.testKpi = testKpi;
 
                 Kpi most_related_kpi = JsonConvert.DeserializeObject<Kpi>(json_string);
                 ViewBag.most_related_kpi = most_related_kpi;
@@ -218,7 +216,7 @@ namespace UrbanScienceCapstone.Controllers
 
         }
 
-
+        /*
         public async Task<ActionResult> Keywords(string search)
         {
             try
@@ -249,6 +247,7 @@ namespace UrbanScienceCapstone.Controllers
             }
             return View();
         }
+        */
         public async Task<ActionResult> TestKPI(string search)
         {
             //string uriBase2 = "http://localhost:65007/api/Kpi";
