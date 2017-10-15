@@ -1,14 +1,13 @@
 ﻿
-<p style="float:left;">Hello @ViewBag.dealer_name </p>
 <div class="center">
     @if(ViewBag.kpi_p_val < .50) { 
-        <h2>You are performing poorly on @ViewBag.kpi_name</h2>
+        <h2>@ViewBag.dealer_name, You are performing poorly on @ViewBag.kpi_name</h2>
         <br />
         <hr />
         <br />
         <p>Look at the actions below for tips on improving your performance</p>
     }else{ 
-        <h2>You are performing well in @ViewBag.kpi_name</h2>
+        <h2>@ViewBag.dealer_name, You are performing well in @ViewBag.kpi_name</h2>
         <br />
         <hr />
         <br />
