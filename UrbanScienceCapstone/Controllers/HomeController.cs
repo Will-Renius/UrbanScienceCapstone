@@ -28,11 +28,10 @@ namespace UrbanScienceCapstone.Controllers
 {
     public class HomeController : Controller
     {
-        //const string uriBase = "http://localhost:65007/api/keywords"; //delete
 
         const string subscriptionKey = "dadc20b8bf47462bb82321e581b795c6";
         const string VDA_API_URL = "http://virtualdealershipadvisorapi.azurewebsites.net/api/";
-
+        //const string VDA_API_URL = "http://localhost:65007/api/";
         const string SessionKeyDealerId = "_DealerId";
 
 
@@ -48,7 +47,7 @@ namespace UrbanScienceCapstone.Controllers
             //https://docs.microsoft.com/en-us/aspnet/web-api/overview/advanced/sending-html-form-data-part-1
             //https://www.exceptionnotfound.net/asp-net-mvc-demystified-modelstate/
 
-            if(ModelState.IsValid && string.IsNullOrEmpty(info.dealerid))
+            if(ModelState.IsValid && !string.IsNullOrEmpty(info.dealerid))
             {
                 //just copied code below calling needed kpis, definitely refactor
                 List<Kpi> most_needed_kpis = new List<Kpi>();
@@ -104,9 +103,14 @@ namespace UrbanScienceCapstone.Controllers
             //get the most related kpi
             //string related_kpi_url = "http://localhost:65007/api/RelatedKpi";
             string related_kpi_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/RelatedKpi";
+            string dealer_name = HttpContext.Session.GetString(SessionKeyDealerId);
+            if (string.IsNullOrEmpty(dealer_name))
+            {
+                dealer_name = "omega";
+            }
             try
             {
-                string url = related_kpi_url + "?query=" + Uri.EscapeDataString(search);
+                string url = $"{related_kpi_url}?query={search}&dealer_name='{dealer_name}'";
                 var client = new HttpClient();
 
                 client.DefaultRequestHeaders.Accept.Clear();
@@ -131,9 +135,11 @@ namespace UrbanScienceCapstone.Controllers
             //string needed_kpi_api_url = "http://localhost:65007/api/NeededKpi";
             string needed_kpi_api_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/NeededKpi";
             List<Kpi> most_needed_kpis = new List<Kpi>();
+
             try
             {
-                string url = $"{needed_kpi_api_url}?dealer_name={Uri.EscapeDataString("Omega")}";
+
+                string url = $"{needed_kpi_api_url}?dealer_name={Uri.EscapeDataString(dealer_name)}";
                 //string url = uriBase2;
                 var client = new HttpClient();
 
@@ -162,7 +168,7 @@ namespace UrbanScienceCapstone.Controllers
 
 
         }
-        public async Task<ActionResult> ActionResponse(string kpi_name, int kpi_value)
+        public async Task<ActionResult> ActionResponse(string kpi_name, int kpi_value, double kpi_p_val)
         {
 
 
@@ -204,86 +210,12 @@ namespace UrbanScienceCapstone.Controllers
             ViewBag.kpi_name = kpi_name;
             ViewBag.kpi_value = kpi_value;
             return View();
-            /*
-             * //this is where we want to hit our API to identify keywords.
 
-            //for some reason if I call our client from this function it says: "Search not found"
-            // My assumption is that this funtion is the one that takes it to the new page
-            //      so leaving for now
-            return RedirectToAction("Keywords", "Home", new { search = model.search });
-             */
 
 
         }
 
-        /*
-        public async Task<ActionResult> Keywords(string search)
-        {
-            try
-            {
-                string url = uriBase + "?query=" + Uri.EscapeDataString(search);
 
-                var client = new HttpClient();
-
-                client.DefaultRequestHeaders.Accept.Clear();
-                //add any default headers below this
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json"));
-
-                HttpResponseMessage response = await client.GetAsync(url);
-                string json_string = await response.Content.ReadAsStringAsync();
-                List<string> keywords = JsonConvert.DeserializeObject<List<string>>(json_string);
-
-                if (keywords.Count == 0)
-                {
-                    keywords.Add("No keywords identified");
-                }
-                ViewBag.keywords = keywords;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return null;
-            }
-            return View();
-        }
-        */
-        public async Task<ActionResult> TestKPI(string search)
-        {
-            //string uriBase2 = "http://localhost:65007/api/Kpi";
-            string uriBase2 = "http://virtualdealershipadvisorapi.azurewebsites.net/api/kpi";
-            try
-            {
-                string url = uriBase2 + "?query=" + Uri.EscapeDataString(search);
-                //string url = uriBase2;
-                var client = new HttpClient();
-
-                client.DefaultRequestHeaders.Accept.Clear();
-                //add any default headers below this
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json"));
-
-                HttpResponseMessage response = await client.GetAsync(url);
-                string json_string = await response.Content.ReadAsStringAsync();
-                Kpi testKpi= JsonConvert.DeserializeObject<Kpi>(json_string);
-
-                
-                ViewBag.testKpi = testKpi;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                
-            }
-            return View();
-        }
-
-
-
-        public ActionResult speechRecognition()
-        {
-            return View();
-        }
     }
         
 }

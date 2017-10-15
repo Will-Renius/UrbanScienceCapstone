@@ -1,7 +1,7 @@
 ﻿
 
 <div class="center">
-    @if(ViewBag.kpi_value < 50) { 
+    @if(ViewBag.kpi_p_val < .50) { 
         <h2>You are performing poorly on @ViewBag.kpi_name</h2>
         <br />
         <hr />
@@ -14,13 +14,16 @@
         <br />
         <p>Improvements can still be made, look at the actions below for tips on improving your performance </p>
     }
+    <br />
+    <hr />
+    <br />
     <div class="center">
         <div>
             @{ var count = 1; }
             @foreach (var action in ViewBag.action_list)
             {
-                <div class="col-md-4" style="float:left">
-                    <div class="card border-info mb-3" style="max-width: 20rem;">
+               
+                    <div class="action-card card border-info mb-3">
                         <div class="card-block">
                             <div class="card-header">Action @count</div>
                             <div class="card-body">
@@ -29,7 +32,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
                 count = count + 1;
             }

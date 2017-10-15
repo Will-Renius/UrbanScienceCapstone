@@ -7,58 +7,44 @@
 
 @if (ViewBag.most_related_kpi != null)
 {
+    string card_class = "";
+    string card_text = "";
+    string button_class = "";
     <h2>Is this what you were looking for?</h2>
     <br />
     <hr />
     <br />
+
     <div class="center" style="text-align:center;">
         @if (@ViewBag.most_related_kpi.p_val < 0.2)
         {
-            <div class="card border-danger mb-3" style="max-width: 20rem;margin:auto;">
-                <div class="card-header">@ViewBag.most_related_kpi.brand @ViewBag.most_related_kpi.segment @ViewBag.most_related_kpi.name</div>
-                <div class="card-body">
-                    <h4 class="card-title">@ViewBag.most_related_kpi.value</h4>
-                    <h6 class="card-subtitle mb-2 text-muted">@string.Format("kpi percentile {0:0.0%}", ViewBag.most_related_kpi.p_val)</h6>
-                    <p class="card-text">You are doing far below average on this measurement. Click the button below to view actions you can take to improve your @ViewBag.most_related_kpi.name</p>
-                    <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @ViewBag.most_related_kpi.name, kpi_value = @ViewBag.most_related_kpi.value })" class="btn btn-outline btn-danger">View Actions</a>
-                </div>
-            </div>
-
+            card_class = "card border-danger mb-3";
+            card_text = $"You are performing far below average on this measurement. Click the button below to view actions you can take to improve your {@ViewBag.most_related_kpi.name}";
+            button_class = "btn btn-outline btn-danger";
         }
         else if (@ViewBag.most_related_kpi.p_val < 0.5)
         {
-            <div class="card border-warning mb-3" style="max-width: 20rem;margin:auto;">
-                <div class="card-header">@ViewBag.most_related_kpi.name</div>
-                <div class="card-body">
-                    <h4 class="card-title">@ViewBag.most_related_kpi.value</h4>
-                    <h6 class="card-subtitle mb-2 text-muted">@string.Format("kpi percentile {0:0.0%}", ViewBag.most_related_kpi.p_val)</h6>
-                    <p class="card-text">You are doing below average on this measurement. Click the button below to view actions you can take to improve your kpi.name</p>
-                    <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @ViewBag.most_related_kpi.name, kpi_value = @ViewBag.most_related_kpi.value })" class="btn btn-outline btn-warning">View Actions</a>
-                </div>
-            </div>
-
+            card_class = "card border-warning mb-3";
+            card_text = $"You are performing below average on this measurement. Click the button below to view actions you can take to improve your {@ViewBag.most_related_kpi.name}";
+            button_class = "btn btn-outline btn-warning";
         }
         else
         {
-            <div class="card border-success mb-3" style="max-width: 20rem;margin:auto;">
-                <div class="card-header">@ViewBag.most_related_kpi.name</div>
-                <div class="card-body">
-                    <h4 class="card-title">@ViewBag.most_related_kpi.value</h4>
-                    <h6 class="card-subtitle mb-2 text-muted">@string.Format("kpi percentile {0:0.0%}", ViewBag.most_related_kpi.p_val)</h6>
-                    <p class="card-text">You are performing above average in this measurement. However, you can always find ways to improve. Click the button below to view actions you can take to improve your kpi.name</p>
-                    <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @ViewBag.most_related_kpi.name, kpi_value = @ViewBag.most_related_kpi.value })" class="btn btn-outline btn-success">View Actions</a>
-                </div>
-            </div>
-
+            card_class = "card border-success mb-3";
+            card_text = $"You are performing above average in this measurement. However, you can always find ways to improve. Click the button below to view actions you can take to improve your {@ViewBag.most_related_kpi.name}";
+            button_class = "btn btn-outline btn-success";
         }
-        @*<div class="card border-success mb-3" style="max-width: 20rem;">
-            <div class="card-header">@ViewBag.most_related_kpi.name</div>
+        
+        <div class="@(card_class)" style="max-width: 20rem;margin:auto;">
+            <div class="card-header">@ViewBag.most_related_kpi.brand @ViewBag.most_related_kpi.segment @ViewBag.most_related_kpi.name</div>
             <div class="card-body">
                 <h4 class="card-title">@ViewBag.most_related_kpi.value</h4>
-                <p class="card-text">You are doing well in this measurement. You may still look for ways to improve by clicking the button bellow or view your most needed improvements</p>
-                <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @ViewBag.most_related_kpi.name, kpi_value = @ViewBag.most_related_kpi.value })" class="btn btn-outline btn-success">View Actions</a>
+                <h6 class="card-subtitle mb-2 text-muted">@string.Format("kpi percentile {0:0.0%}", ViewBag.most_related_kpi.p_val)</h6>
+                <p class="card-text">@card_text </p>
+                <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @ViewBag.most_related_kpi.name, kpi_value = @ViewBag.most_related_kpi.value, kpi_p_val = @ViewBag.most_related_kpi.p_val })" class="@(button_class)">View Actions</a>
             </div>
-        </div>*@
+        </div>
+
     </div>
     //btn-lg btn-block
 
@@ -76,49 +62,40 @@ else
 <br />
 @if (ViewBag.needed_kpi_list != null)
 {
+    string card_class = "";
+    string card_text = "";
+    string button_class = "";
             @foreach (var @kpi in ViewBag.needed_kpi_list)
             {
                 <div class="col-md-4" style="float:left;text-align:center">
 
                     @if (@kpi.p_val < 0.2)
                     {
-                        <div class="card border-danger mb-3" style="max-width: 20rem;">
-                            <div class="card-header">@kpi.brand @kpi.segment @kpi.name</div>
-                            <div class="card-body">
-                                <h4 class="card-title">@kpi.value</h4>
-                                <h6 class="card-subtitle mb-2 text-muted">@string.Format("kpi percentile {0:0.0%}", kpi.p_val)</h6>
-                                <p class="card-text">You are doing far below average on this measurement. Click the button below to view actions you can take to improve your @kpi.name</p>
-                                <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @kpi.name, kpi_value = @kpi.value })" class="btn btn-outline btn-danger">View Actions</a>
-                            </div>
-                        </div>
-
+                        card_class = "card border-danger mb-3";
+                        card_text = $"You are performing far below average on this measurement. Click the button below to view actions you can take to improve your {@kpi.name}";
+                        button_class = "btn btn-outline btn-danger";
                     }
                     else if (@kpi.p_val < 0.5)
                     {
-                        <div class="card border-warning mb-3" style="max-width: 20rem;">
-                            <div class="card-header">@kpi.name</div>
-                            <div class="card-body">
-                                <h4 class="card-title">@kpi.value</h4>
-                                <h6 class="card-subtitle mb-2 text-muted">@string.Format("kpi percentile {0:0.0%}", kpi.p_val)</h6>
-                                <p class="card-text">You are doing far below average on this measurement. Click the button below to view actions you can take to improve your kpi.name</p>
-                                <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @kpi.name, kpi_value = @kpi.value })" class="btn btn-outline btn-warning">View Actions</a>
-                            </div>
-                        </div>
-
+                        card_class = "card border-warning mb-3";
+                        card_text = $"You are performing below average on this measurement. Click the button below to view actions you can take to improve your {@kpi.name}";
+                        button_class = "btn btn-outline btn-warning";
                     }
                     else
                     {
-                        <div class="card border-success mb-3" style="max-width: 20rem;">
-                            <div class="card-header">@kpi.name</div>
-                            <div class="card-body">
-                                <h4 class="card-title">@kpi.value</h4>
-                                <h6 class="card-subtitle mb-2 text-muted">@string.Format("kpi percentile {0:0.0%}", kpi.p_val)</h6>
-                                <p class="card-text">You are performing above average in this measurement. However, you can always find ways to improve. Click the button below to view actions you can take to improve your kpi.name</p>
-                                <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @kpi.name, kpi_value = @kpi.value })" class="btn btn-outline btn-success">View Actions</a>
-                            </div>
+                        card_class = "card border-success mb-3";
+                        card_text = $"You are performing above average in this measurement. However, you can always find ways to improve. Click the button below to view actions you can take to improve your {@kpi.name}";
+                        button_class = "btn btn-outline btn-success";
+                     }
+                    <div class="@(card_class)" style="max-width: 20rem;">
+                        <div class="card-header">@kpi.brand @kpi.segment @kpi.name</div>
+                        <div class="card-body">
+                            <h4 class="card-title">@kpi.value</h4>
+                            <h6 class="card-subtitle mb-2 text-muted">@string.Format("kpi percentile {0:0.0%}", kpi.p_val)</h6>
+                            <p class="card-text">@card_text</p>
+                            <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @kpi.name, kpi_value = @kpi.value, kpi_p_val = @kpi.p_val })" class="@(button_class)">View Actions</a>
                         </div>
-
-                    }
+                    </div>
                 
                 </div>
             }

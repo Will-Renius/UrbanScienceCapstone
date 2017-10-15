@@ -49,3 +49,7 @@
     border-color: #808080;
     border-width: 3px;
 }
+.action-card {
+    max-width: 500px;
+    margin:auto;
+}
