@@ -37,6 +37,8 @@ namespace UrbanScienceCapstone.Controllers
 
         public ActionResult Login()
         {
+            string dealer_name = HttpContext.Session.GetString(SessionKeyDealerId);
+            ViewBag.dealer_name = dealer_name;
             return View();
         }
         //If we make their dealerId persist through multiple sessions, might wanna have this as the default route
@@ -93,6 +95,8 @@ namespace UrbanScienceCapstone.Controllers
         //swtichted iactionresult to ation result, may want to switch back
         public ActionResult Index()
         {
+            string dealer_name = HttpContext.Session.GetString(SessionKeyDealerId);
+            ViewBag.dealer_name = dealer_name;
             return View();
         }
 
@@ -104,13 +108,14 @@ namespace UrbanScienceCapstone.Controllers
             //string related_kpi_url = "http://localhost:65007/api/RelatedKpi";
             string related_kpi_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/RelatedKpi";
             string dealer_name = HttpContext.Session.GetString(SessionKeyDealerId);
+            ViewBag.dealer_name = dealer_name;
             if (string.IsNullOrEmpty(dealer_name))
             {
                 dealer_name = "omega";
             }
             try
             {
-                string url = $"{related_kpi_url}?query={search}&dealer_name='{dealer_name}'";
+                string url = $"{related_kpi_url}?query={search}&dealer_name={dealer_name}";
                 var client = new HttpClient();
 
                 client.DefaultRequestHeaders.Accept.Clear();
@@ -170,6 +175,8 @@ namespace UrbanScienceCapstone.Controllers
         }
         public async Task<ActionResult> ActionResponse(string kpi_name, int kpi_value, double kpi_p_val)
         {
+            string dealer_name = HttpContext.Session.GetString(SessionKeyDealerId);
+            ViewBag.dealer_name = dealer_name;
 
 
             //KpiList kpi_list_object = JsonConvert.DeserializeObject<KpiList>(TempData["kpi_list"].ToString());
