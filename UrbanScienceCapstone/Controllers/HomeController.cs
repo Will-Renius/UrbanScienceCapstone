@@ -104,6 +104,7 @@ namespace UrbanScienceCapstone.Controllers
 
         public async Task<ActionResult> KPI(string search)
         {
+            ViewBag.search = search;
             //get the most related kpi
             //string related_kpi_url = "http://localhost:65007/api/RelatedKpi";
             string related_kpi_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/RelatedKpi";
@@ -216,6 +217,7 @@ namespace UrbanScienceCapstone.Controllers
             ViewBag.action_list = actions_to_take;
             ViewBag.kpi_name = kpi_name;
             ViewBag.kpi_value = kpi_value;
+            ViewBag.kpi_p_val = kpi_p_val;
             return View();
 
 
