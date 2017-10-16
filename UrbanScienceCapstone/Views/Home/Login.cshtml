@@ -8,6 +8,11 @@
 
 
 <div class="center" style="text-align:center;">
+    @if (ViewBag.error)
+    {
+        <h3 style="color:red">Web API Currently Down, Please Refresh</h3>
+
+    }
     <h2>
         Login
     </h2>

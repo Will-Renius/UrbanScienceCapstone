@@ -35,10 +35,11 @@ namespace UrbanScienceCapstone.Controllers
         const string SessionKeyDealerId = "_DealerId";
 
 
-        public ActionResult Login()
+        public ActionResult Login(bool error)
         {
             string dealer_name = HttpContext.Session.GetString(SessionKeyDealerId);
             ViewBag.dealer_name = dealer_name;
+            ViewBag.error = error;
             return View();
         }
         //If we make their dealerId persist through multiple sessions, might wanna have this as the default route
@@ -74,7 +75,7 @@ namespace UrbanScienceCapstone.Controllers
                     else
                     {
                         string dealer = HttpContext.Session.GetString(SessionKeyDealerId);
-                        return RedirectToAction("Login", "Home");
+                        return RedirectToAction("Login", "Home", new { error = true });
                     }
                 }
                 catch (Exception e)
