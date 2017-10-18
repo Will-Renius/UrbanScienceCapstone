@@ -28,10 +28,11 @@ namespace UrbanScienceCapstone.Controllers
 {
     public class HomeController : Controller
     {
+        const string BING_SPEECH_KEY1 = "66a26f67d25047f58c82aeb821a0533e";
+        const string BING_SPEECH_KEY2 = "da151b83f13e4d3f9d2ffc6c4dbac089";
 
-        const string subscriptionKey = "dadc20b8bf47462bb82321e581b795c6";
-        const string VDA_API_URL = "http://virtualdealershipadvisorapi.azurewebsites.net/api/";
-        //const string VDA_API_URL = "http://localhost:65007/api/";
+        const string VDA_API_URL = "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/";
+
         const string SessionKeyDealerId = "_DealerId";
 
 
@@ -111,9 +112,7 @@ namespace UrbanScienceCapstone.Controllers
         public async Task<ActionResult> KPI(string search)
         {
             ViewBag.search = search;
-            //get the most related kpi
-            //string related_kpi_url = "http://localhost:65007/api/RelatedKpi";
-            string related_kpi_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/RelatedKpi";
+            string related_kpi_url = $"{VDA_API_URL}RelatedKpi";
             string dealer_name = HttpContext.Session.GetString(SessionKeyDealerId);
             if (string.IsNullOrEmpty(dealer_name))
             {
@@ -145,8 +144,7 @@ namespace UrbanScienceCapstone.Controllers
 
 
             // call web api to get action sending it kpi information
-            //string needed_kpi_api_url = "http://localhost:65007/api/NeededKpi";
-            string needed_kpi_api_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/NeededKpi";
+            string needed_kpi_api_url = $"{VDA_API_URL}NeededKpi";
             List<Kpi> most_needed_kpis = new List<Kpi>();
 
             try
@@ -195,7 +193,7 @@ namespace UrbanScienceCapstone.Controllers
 
             // call web api to get action sending it kpi information
             //string action_api_url = "http://localhost:65007/api/Actions";
-            string action_api_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/Actions";
+            string action_api_url = $"{VDA_API_URL}Actions";
             List<KpiAction> actions_to_take = new List<KpiAction>();
             try
             {
