@@ -50,7 +50,7 @@ namespace UrbanScienceCapstone.Controllers
             //https://docs.microsoft.com/en-us/aspnet/web-api/overview/advanced/sending-html-form-data-part-1
             //https://www.exceptionnotfound.net/asp-net-mvc-demystified-modelstate/
 
-            if(ModelState.IsValid && !string.IsNullOrEmpty(info.dealerid))
+            if (ModelState.IsValid && !string.IsNullOrEmpty(info.dealerid))
             {
                 //just copied code below calling needed kpis, definitely refactor
                 List<Kpi> most_needed_kpis = new List<Kpi>();
@@ -65,7 +65,7 @@ namespace UrbanScienceCapstone.Controllers
                         new MediaTypeWithQualityHeaderValue("application/json"));
 
                     HttpResponseMessage response = await client.GetAsync(url);
-                    
+
 
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
@@ -110,10 +110,21 @@ namespace UrbanScienceCapstone.Controllers
 
         public async Task<ActionResult> KPI(string search)
         {
+            List<Intent> intent_list = new List<Intent>
+            {
+                new Intent(){ Id = 1, Name = "Dealer Share", Utterance=search },
+                new Intent(){ Id = 1, Name = "Dealer Effectiveness", Utterance=search },
+                new Intent(){ Id = 1, Name = "Dealer Sales", Utterance=search },
+                new Intent(){ Id = 1, Name = "Insell", Utterance=search },
+                new Intent(){ Id = 1, Name = "None", Utterance=search }
+            };
+            ViewBag.SelectedValue = "None";
+           
+            ViewBag.ListOfIntents = intent_list;
             ViewBag.search = search;
             //get the most related kpi
-            //string related_kpi_url = "http://localhost:65007/api/RelatedKpi";
-            string related_kpi_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/RelatedKpi";
+            string related_kpi_url = "http://localhost:65007/api/RelatedKpi";
+            //string related_kpi_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/RelatedKpi";
             string dealer_name = HttpContext.Session.GetString(SessionKeyDealerId);
             if (string.IsNullOrEmpty(dealer_name))
             {
@@ -223,7 +234,7 @@ namespace UrbanScienceCapstone.Controllers
 
             }
             //
-            
+
 
             ViewBag.action_list = actions_to_take;
             ViewBag.kpi_name = kpi_name;
@@ -234,8 +245,37 @@ namespace UrbanScienceCapstone.Controllers
 
 
         }
+        [HttpPost]
+        public async Task<ActionResult> UpdateLuis(string name, string utterance)
+        {
+            //string update_luis_url = "http://localhost:65007/api/UpdateLuis";
+            string update_luis_url = "http://virtualdealershipadvisorapi.azurewebsites.net/api/UpdateLuis";
+            List<Kpi> most_needed_kpis = new List<Kpi>();
+
+            try
+            {
+
+                string url = $"{update_luis_url}?intent={Uri.EscapeDataString(name)}&utterance={Uri.EscapeDataString(utterance)}";
+                //string url = uriBase2;
+                var client = new HttpClient();
+
+                client.DefaultRequestHeaders.Accept.Clear();
+                //add any default headers below this
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage response = await client.GetAsync(url);
+                string json_string = await response.Content.ReadAsStringAsync();
+                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+            }
+            return RedirectToAction("KPI", "Home", new { search = name });
 
 
+        }
     }
-        
 }
