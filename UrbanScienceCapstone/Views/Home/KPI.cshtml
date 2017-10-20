@@ -113,8 +113,10 @@ else
     <br />
   }
     <center>
-        <h3>Not what you were looking for? Click Try Again to re-phrase your question</h3>
-        <a href="@Url.Action("Index", "Home")" class="btn btn-outline btn-info">Try Again</a>
+        <h3>Not what you were looking for? Select the KPI you were looking for below</h3>
+        @*<a href="@Url.Action("Index", "Home")" class="btn btn-outline btn-info">Try Again</a>*@
+    </center>
+
         @*<div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Dropdown button
@@ -125,41 +127,37 @@ else
                 <a class="dropdown-item" href="@Url.Action("Index", "UpdateLuisAndSearch", new { intent = "None" })">None</a>
             </div>
         </div>*@
-        @model UrbanScienceCapstone.Models.Intent
-        @{
-            <form asp-controller="Home" asp-action="UpdateLuis" method="post" class="form-horizontal" role="form">
-                <div class="form-group">
-                    <div class="row">
-                        <div class="alert-danger" asp-validation-summary="ModelOnly"></div>
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                            <input asp-for="Utterance" style="display:none" value="@ViewBag.search" />
-                            <label asp-for="Name" class="control-label"></label>
-                            <select asp-for="Name"
-                                    class="form-control"
-                                    asp-items="@(new SelectList(@ViewBag.ListOfIntents,"Name", "Name"))"></select>
+        <br />
+        <div class="center" style="margin:auto">
+
+
+            @model UrbanScienceCapstone.Models.Intent
+            @{
+
+                <form asp-controller="Home" asp-action="UpdateLuis" method="post" class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="alert-danger" asp-validation-summary="ModelOnly"></div>
+                            <div class="dropdown_class" style="min-width:200px;">
+                                <input asp-for="Utterance" style="display:none" value="@ViewBag.search" />
+                                <label asp-for="Name" class="control-label"></label>
+                                <select asp-for="Name"
+                                        class="form-control"
+                                        asp-items="@(new SelectList(@ViewBag.ListOfIntents,"Name", "Name"))"></select>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                            <input id="Submit1" type="submit" value="submit" />
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="submitter" style="margin:auto">
+                                <input id="Submit1" type="submit" value="submit" />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                            @if (ViewBag.SelectedValue != null)
-                            {
-                                <text>Selected Intent ID: </text> @ViewBag.SelectedValue;
-                            }
-                        </div>
-                    </div>
-                </div>
-            </form>
-        }  
-    </center>
+
+                </form>
+            }
+        </div>
 
 
 
