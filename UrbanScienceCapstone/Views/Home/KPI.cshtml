@@ -124,38 +124,73 @@
          returnArray["entityLabels"] = entityLabels;
          console.log(returnArray);
          return returnArray;
-     }
+    }
+     function checkAnswer() {
+         //console.log("i've submitted something!");
+         //console.log($('#form1').serialize());
+
+         var data = JSON.stringify($("#form1").serializeArray());
+         console.log("form array");
+         console.log($("#form1").serializeArray()[0]);//  <-----------
+         var testdata = JSON.stringify(objectifyForm($("#form1").serializeArray()));
+         //"{ \"intentName\": \"None\",\"text\": null,\"entityLabels\": null}";
+         //console.log(testdata);
+         //console.log(data);
+         $.ajax({
+             //"http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis"
+             //"http://localhost:65007/api/UpdateLuis"
+             url: "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis",
+             type: "POST",
+             data: testdata,
+             contentType: "application/json; charset=utf-8",
+             dataType: "json",
+             success: function () {
+                 var loc = jqxhr.getResponseHeader('Location');
+                 var a = $('<a/>', { href: loc, text: loc });
+                 $('#message').html(a);
+             },
+             error: function () {
+                 $('#message').html("Error posting the update.");
+             }
+
+         });
+         //$location.url('/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"]);
+         window.location.href = '/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"];
+         //location = '/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"];
+         return false;
+
+     };
      $(document).ready(function () {
          
-         $("#form1").submit(function () {
-             //console.log("i've submitted something!");
-             //console.log($('#form1').serialize());
+         //var checkAnswer = function () {
+         //    //console.log("i've submitted something!");
+         //    //console.log($('#form1').serialize());
              
-             var data = JSON.stringify($("#form1").serializeArray()); //  <-----------
-             var testdata = JSON.stringify(objectifyForm($("#form1").serializeArray()));
-                 //"{ \"intentName\": \"None\",\"text\": null,\"entityLabels\": null}";
-             //console.log(testdata);
-             //console.log(data);
-             $.ajax({
-                 //"http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis"
-                 //"http://localhost:65007/api/UpdateLuis"
-                 url: "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis",
-                 type: "POST",
-                 data: testdata,
-                 contentType: "application/json; charset=utf-8",
-                 dataType: "json",
-                 success: function () {
-                     var loc = jqxhr.getResponseHeader('Location');
-                     var a = $('<a/>', { href: loc, text: loc });
-                     $('#message').html(a);
-                 },
-                 error: function () {
-                     $('#message').html("Error posting the update.");
-                 }
+         //    var data = JSON.stringify($("#form1").serializeArray()); //  <-----------
+         //    var testdata = JSON.stringify(objectifyForm($("#form1").serializeArray()));
+         //        //"{ \"intentName\": \"None\",\"text\": null,\"entityLabels\": null}";
+         //    //console.log(testdata);
+         //    //console.log(data);
+         //    $.ajax({
+         //        //"http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis"
+         //        //"http://localhost:65007/api/UpdateLuis"
+         //        url: "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis",
+         //        type: "POST",
+         //        data: testdata,
+         //        contentType: "application/json; charset=utf-8",
+         //        dataType: "json",
+         //        success: function () {
+         //            var loc = jqxhr.getResponseHeader('Location');
+         //            var a = $('<a/>', { href: loc, text: loc });
+         //            $('#message').html(a);
+         //        },
+         //        error: function () {
+         //            $('#message').html("Error posting the update.");
+         //        }
                   
-             });
+         //    });
              
-         });
+         //};
      });
      //var jqxhr = $.post('http://localhost:65007/api/UpdateLuis', $('#form1').serialize())
      //    .success(function () {
@@ -309,7 +344,7 @@ else
         </div>*@
         <br />
         <h1>Update Language Recognition</h1>
-        <form id="form1">
+        <form id="form1" onSubmit="return checkAnswer();">
             <div>
                 <label for="intentName">Intent Name</label>
             </div>

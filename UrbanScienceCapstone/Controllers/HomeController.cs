@@ -118,19 +118,19 @@ namespace UrbanScienceCapstone.Controllers
 
             try
             {
-                //string url = $"{VDA_API_URL}/RelatedKpi?query={search}&dealer_name={dealer_name}";
-                //var client = new HttpClient();
+                string url = $"{VDA_API_URL}/RelatedKpi?query={search}&dealer_name={dealer_name}";
+                var client = new HttpClient();
 
-                //client.DefaultRequestHeaders.Accept.Clear();
-                ////add any default headers below this
-                //client.DefaultRequestHeaders.Accept.Add(
-                //    new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Accept.Clear();
+                //add any default headers below this
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/json"));
 
-                //HttpResponseMessage response = await client.GetAsync(url);
-                //string json_string = await response.Content.ReadAsStringAsync();
+                HttpResponseMessage response = await client.GetAsync(url);
+                string json_string = await response.Content.ReadAsStringAsync();
 
-                //Kpi most_related_kpi = JsonConvert.DeserializeObject<Kpi>(json_string);
-                //ViewBag.most_related_kpi = most_related_kpi;
+                Kpi most_related_kpi = JsonConvert.DeserializeObject<Kpi>(json_string);
+                ViewBag.most_related_kpi = most_related_kpi;
             }
             catch (Exception e)
             {
