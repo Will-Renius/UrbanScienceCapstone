@@ -1,9 +1,187 @@
-﻿<script type="text/javascript" src="js/bootstrap/bootstrap-dropdown.js"></script>
-<script>
-     $(document).ready(function(){
-        $('.dropdown-toggle').dropdown()
-    });
+﻿<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+
+<script  type="text/javascript">
+     
+     function ShowSelection() {
+         var textComponent = document.getElementById('search');
+         var selectedText;
+
+         if (textComponent.selectionStart !== undefined) {// Standards Compliant Version
+             var startPos = textComponent.selectionStart;
+             var endPos = textComponent.selectionEnd;
+             selectedText = textComponent.value.substring(startPos, endPos);
+         }
+         else if (document.selection !== undefined) {// IE Version
+             textComponent.focus();
+             var sel = document.selection.createRange();
+             selectedText = sel.text;
+         }
+
+         console.log("You selected: " + selectedText);
+    }
+
+    function addFields() {
+        var textComponent = document.getElementById('search');
+        console.log(textComponent);
+        var selectedText;
+        var startPos = 0;
+        var endPos = 0;
+        if (textComponent.selectionStart !== undefined) {// Standards Compliant Version
+            startPos = textComponent.selectionStart;
+            endPos = textComponent.selectionEnd;
+            selectedText = textComponent.value.substring(startPos, endPos);
+        }
+        // Container <div> where dynamic content will be placed
+        var container = document.getElementById("container");
+        // Clear previous contents of the container
+
+        //childElementCount can give number of child elements
+        // Create 
+        var div = document.createElement("div")
+        var entityOptions = ["Filter::Segment", "Filter::Brand", "Filter::Model"] 
+        div.appendChild(document.createTextNode("Entity Name"));
+        var input = document.createElement("Select");
+        input.name = "entityLabels[][entityName]";
+        
+        for (i in entityOptions) {
+            var opt = document.createElement("option");
+            opt.value = entityOptions[i];
+            //opt.innerHTML = entity; // whatever property it has
+            opt.appendChild(document.createTextNode(entityOptions[i]))
+            // then append it to the select element
+            input.appendChild(opt);
+
+        }
+        div.appendChild(input);
+
+
+        //Location::From
+
+        div.appendChild(document.createTextNode("Start Index"));
+        var input = document.createElement("input");
+        input.type = "number";
+        input.name = "entityLabels[][startCharIndex]";
+        input.value = startPos;
+        div.appendChild(input);
+
+        div.appendChild(document.createTextNode("End Index"));
+        var input = document.createElement("input");
+        input.type = "number";
+        input.name = "entityLabels[][endCharIndex]";
+        input.value = endPos;
+        div.appendChild(input);
+
+        var button = document.createElement("button");
+        button.innerHTML = "remove";
+        button.className = "removeButton";
+        button.type = "button";
+        button.onclick = function () {
+            //$(this).parent().css("background-color", "red");
+
+            $(this).parent().remove(); return false;
+        };
+        // 2. Append somewhere
+        div.appendChild(button);
+
+
+        //
+        // Append a line break 
+        container.appendChild(div);
+
+        container.appendChild(document.createElement("br"));
+        
+    }
+
+
+     function objectifyForm(formArray) {//serialize data function
+
+         var returnArray = {};
+         var entityLabels = [];
+         var currentEntity = {};
+         for (var i = 0; i < formArray.length; i++) {
+             
+             //console.log(formArray[i])
+             var splitName = formArray[i]["name"].split("[]");
+             if (splitName[0] == "entityLabels") {
+                 var name = splitName[1].replace("[", "").replace("]", "");
+                 currentEntity[name] = formArray[i]['value'];
+                 console.log("current entity");
+                 console.log(currentEntity);
+                 if (Object.keys(currentEntity).length == 3) {
+                     entityLabels.push(currentEntity);
+                     currentEntity = {};
+                 }
+
+             }
+             else {
+
+                 returnArray[formArray[i]['name']] = formArray[i]['value'];
+
+             }
+             //console.log(formArray[i]["name"].split("[]")[0])
+
+         }
+         returnArray["entityLabels"] = entityLabels;
+         console.log(returnArray);
+         return returnArray;
+     }
+     $(document).ready(function () {
+         
+         $("#form1").submit(function () {
+             //console.log("i've submitted something!");
+             //console.log($('#form1').serialize());
+             
+             var data = JSON.stringify($("#form1").serializeArray()); //  <-----------
+             var testdata = JSON.stringify(objectifyForm($("#form1").serializeArray()));
+                 //"{ \"intentName\": \"None\",\"text\": null,\"entityLabels\": null}";
+             //console.log(testdata);
+             //console.log(data);
+             $.ajax({
+                 //"http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis"
+                 //"http://localhost:65007/api/UpdateLuis"
+                 url: "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis",
+                 type: "POST",
+                 data: testdata,
+                 contentType: "application/json; charset=utf-8",
+                 dataType: "json",
+                 success: function () {
+                     var loc = jqxhr.getResponseHeader('Location');
+                     var a = $('<a/>', { href: loc, text: loc });
+                     $('#message').html(a);
+                 },
+                 error: function () {
+                     $('#message').html("Error posting the update.");
+                 }
+                  
+             });
+             
+         });
+     });
+     //var jqxhr = $.post('http://localhost:65007/api/UpdateLuis', $('#form1').serialize())
+     //    .success(function () {
+     //        var loc = jqxhr.getResponseHeader('Location');
+     //        var a = $('<a/>', { href: loc, text: loc });
+     //        $('#message').html(a);
+     //    })
+     //    .error(function () {
+     //        $('#message').html("Error posting the update.");
+     //    });
+     //return false;
 </script>
+@*<script type="text/javascript">
+     $("#form1").submit(function () {
+         var jqxhr = $.post('http://localhost:65007/api/UpdateLuis', $('#form1').serialize())
+             .success(function () {
+                 var loc = jqxhr.getResponseHeader('Location');
+                 var a = $('<a/>', { href: loc, text: loc });
+                 $('#message').html(a);
+             })
+             .error(function () {
+                 $('#message').html("Error posting the update.");
+             });
+         return false;
+     });
+</script>*@
 
 
 <h1>@ViewBag.dealer_name, Select a potential area for improvement</h1>
@@ -114,6 +292,8 @@ else
   }
     <center>
         <h3>Not what you were looking for? Select the KPI you were looking for below</h3>
+        <p>Highlight text to specify if there is a segment or dealer in your search</p>
+        @*<p id="search">@ViewBag.search</p>*@
         @*<a href="@Url.Action("Index", "Home")" class="btn btn-outline btn-info">Try Again</a>*@
     </center>
 
@@ -128,10 +308,38 @@ else
             </div>
         </div>*@
         <br />
-        <div class="center" style="margin:auto">
+        <h1>Update Language Recognition</h1>
+        <form id="form1">
+            <div>
+                <label for="intentName">Intent Name</label>
+            </div>
+            <div>
+                @*<input name="intentName" type="text" />*@
+                <select name="intentName">
+                    <option value="Dealer Sales">Dealer Sales</option>
+                    <option value="Dealer Share">Dealer Share</option>
+                    <option value="Dealer Effectiveness">Dealer Effectiveness</option>
+                    <option value="Insell">Insell</option>
+                    <option value="None">None</option>
+                </select>
+            </div>
+            <div>
+                <label for="text">Search</label>
+            </div>
+            <div>
+                <input id="search" name="text" type="text" value="@ViewBag.search"/>
+            </div>
+            <div>
+                <input type="submit" value="Submit" />
+            </div>
+            <a href="#" id="filldetails" onclick="addFields()">Add Entity</a>
+            <div id="container">
+            </div>
+        </form>
+        @*<div class="center" style="margin:auto">
 
 
-            @model UrbanScienceCapstone.Models.Intent
+            @model UrbanScienceCapstone.Models.UpdateLuis
             @{
 
                 <form asp-controller="Home" asp-action="UpdateLuis" method="post" class="form-horizontal" role="form">
@@ -157,7 +365,7 @@ else
 
                 </form>
             }
-        </div>
+        </div>*@
 
 
 

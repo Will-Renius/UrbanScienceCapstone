@@ -59,32 +59,17 @@ namespace UrbanScienceCapstone.Models
 
     public class UpdateLuis
     {
-        //public List<string> intent_list { get; set; }
-        //public 
-        //public UpdateLuis()
-        //{
-        //    intent_list = new List<string>(new string[] { "Dealer Effectiveness", "Insell", "Dealer Sales" }); ;
-        //}
-        private List<Intent> _flavors;
-        
-        [Display(Name = "Favorite Flavor")]
-        public int SelectedFlavorId { get; set; }
+        [Display(Name = "KPI")]
+        public string intentName { get; set; }
+        public string text { get; set; }
+        public List<EntityLabel> entityLabels { get; set; }
 
-        public IEnumerable<SelectListItem> FlavorItems
-        {
-            get { return new SelectList(_flavors, "Id", "Name"); }
-        }
-        public UpdateLuis()
-        {
-            Intent flavor1 = new Intent();
-            Intent flavor2 = new Intent();
-            flavor1.Id = 1;
-            flavor1.Name = "chocolate";
-            flavor2.Id = 2;
-            flavor2.Name = "vanilla";
-            _flavors.Add(flavor1);
-            _flavors.Add(flavor2);
-        }
+    }
+    public class EntityLabel
+    {
+        public string entityName { get; set; }
+        public int startCharIndex { get; set; }
+        public int endCharIndex { get; set; }
     }
     public class Intent
     {

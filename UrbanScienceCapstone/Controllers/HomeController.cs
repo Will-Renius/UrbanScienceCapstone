@@ -118,19 +118,19 @@ namespace UrbanScienceCapstone.Controllers
 
             try
             {
-                string url = $"{VDA_API_URL}/RelatedKpi?query={search}&dealer_name={dealer_name}";
-                var client = new HttpClient();
+                //string url = $"{VDA_API_URL}/RelatedKpi?query={search}&dealer_name={dealer_name}";
+                //var client = new HttpClient();
 
-                client.DefaultRequestHeaders.Accept.Clear();
-                //add any default headers below this
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json"));
+                //client.DefaultRequestHeaders.Accept.Clear();
+                ////add any default headers below this
+                //client.DefaultRequestHeaders.Accept.Add(
+                //    new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage response = await client.GetAsync(url);
-                string json_string = await response.Content.ReadAsStringAsync();
+                //HttpResponseMessage response = await client.GetAsync(url);
+                //string json_string = await response.Content.ReadAsStringAsync();
 
-                Kpi most_related_kpi = JsonConvert.DeserializeObject<Kpi>(json_string);
-                ViewBag.most_related_kpi = most_related_kpi;
+                //Kpi most_related_kpi = JsonConvert.DeserializeObject<Kpi>(json_string);
+                //ViewBag.most_related_kpi = most_related_kpi;
             }
             catch (Exception e)
             {
@@ -222,35 +222,35 @@ namespace UrbanScienceCapstone.Controllers
 
 
         }
-        [HttpPost]
-        public async Task<ActionResult> UpdateLuis(string name, string utterance)
-        {
-            //string update_luis_url = "http://localhost:65007/api/UpdateLuis";
-            List<Kpi> most_needed_kpis = new List<Kpi>();
+        //[HttpPost]
+        //public async Task<ActionResult> UpdateLuis(UpdateLuis update_object)
+        //{
+        //    //string update_luis_url = "http://localhost:65007/api/UpdateLuis";
+        //    List<Kpi> most_needed_kpis = new List<Kpi>();
 
-            try
-            {
+        //    try
+        //    {
 
-                string url = $"{VDA_API_URL}/UpdateLuis?intent={Uri.EscapeDataString(name)}&utterance={Uri.EscapeDataString(utterance)}";
-                var client = new HttpClient();
+        //        string url = $"{VDA_API_URL}/UpdateLuis?intent={Uri.EscapeDataString(name)}&utterance={Uri.EscapeDataString(utterance)}";
+        //        var client = new HttpClient();
 
-                client.DefaultRequestHeaders.Accept.Clear();
-                //add any default headers below this
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json"));
+        //        client.DefaultRequestHeaders.Accept.Clear();
+        //        //add any default headers below this
+        //        client.DefaultRequestHeaders.Accept.Add(
+        //            new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage response = await client.GetAsync(url);
-                string json_string = await response.Content.ReadAsStringAsync();
+        //        HttpResponseMessage response = await client.GetAsync(url);
+        //        string json_string = await response.Content.ReadAsStringAsync();
                 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e.Message);
 
-            }
-            return RedirectToAction("KPI", "Home", new { search = name });
+        //    }
+        //    return RedirectToAction("KPI", "Home", new { search = name });
 
 
-        }
+        //}
     }
 }
