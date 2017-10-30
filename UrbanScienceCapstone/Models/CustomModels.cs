@@ -45,6 +45,7 @@ namespace UrbanScienceCapstone.Models
         public string actionP { get; set; }
         public string kpi { get; set; }
         public string type { get; set; }
+        public string actionLink { get; set; }
     }
     public class Search
     {
