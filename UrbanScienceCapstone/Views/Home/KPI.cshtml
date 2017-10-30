@@ -325,6 +325,8 @@ else
     <hr />
     <br />
   }
+@if (ViewBag.IsAdmin)
+{
     <center>
         <h3>Not what you were looking for? Select the KPI you were looking for below</h3>
         <p>Highlight text to specify if there is a segment or dealer in your search</p>
@@ -332,7 +334,7 @@ else
         @*<a href="@Url.Action("Index", "Home")" class="btn btn-outline btn-info">Try Again</a>*@
     </center>
 
-        @*<div class="dropdown">
+    @*<div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Dropdown button
             </button>
@@ -342,8 +344,7 @@ else
                 <a class="dropdown-item" href="@Url.Action("Index", "UpdateLuisAndSearch", new { intent = "None" })">None</a>
             </div>
         </div>*@
-        <br />
-        <h1>Update Language Recognition</h1>
+    <br />
         <form id="form1" onSubmit="return checkAnswer();">
             <div>
                 <label for="intentName">Intent Name</label>
@@ -362,7 +363,7 @@ else
                 <label for="text">Search</label>
             </div>
             <div>
-                <input id="search" name="text" type="text" value="@ViewBag.search"/>
+                <input id="search" name="text" type="text" value="@ViewBag.search" />
             </div>
             <div>
                 <input type="submit" value="Submit" />
@@ -374,37 +375,42 @@ else
         @*<div class="center" style="margin:auto">
 
 
-            @model UrbanScienceCapstone.Models.UpdateLuis
-            @{
+                @model UrbanScienceCapstone.Models.UpdateLuis
+                @{
 
-                <form asp-controller="Home" asp-action="UpdateLuis" method="post" class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="alert-danger" asp-validation-summary="ModelOnly"></div>
-                            <div class="dropdown_class" style="min-width:200px;">
-                                <input asp-for="Utterance" style="display:none" value="@ViewBag.search" />
-                                <label asp-for="Name" class="control-label"></label>
-                                <select asp-for="Name"
-                                        class="form-control"
-                                        asp-items="@(new SelectList(@ViewBag.ListOfIntents,"Name", "Name"))"></select>
+                    <form asp-controller="Home" asp-action="UpdateLuis" method="post" class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="alert-danger" asp-validation-summary="ModelOnly"></div>
+                                <div class="dropdown_class" style="min-width:200px;">
+                                    <input asp-for="Utterance" style="display:none" value="@ViewBag.search" />
+                                    <label asp-for="Name" class="control-label"></label>
+                                    <select asp-for="Name"
+                                            class="form-control"
+                                            asp-items="@(new SelectList(@ViewBag.ListOfIntents,"Name", "Name"))"></select>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="submitter" style="margin:auto">
-                                <input id="Submit1" type="submit" value="submit" />
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="submitter" style="margin:auto">
+                                    <input id="Submit1" type="submit" value="submit" />
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                </form>
-            }
-        </div>*@
-
+                    </form>
+                }
+            </div>*@
 
 
+}
+else
+{
+    <center>
+        <h3>Not what you were looking for? Try re-phrasing your question and try again.</h3>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-outline btn-info">Try Again</a>
+    </center>
 
-
-
-
+}
+    

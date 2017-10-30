@@ -47,11 +47,18 @@ namespace UrbanScienceCapstone.Models
         public string type { get; set; }
         public string actionLink { get; set; }
     }
+    
+
     public class Search
     {
         public string search { get; set; }
     }
 
+    public class LoginVerification
+    {
+        public bool isAdmin { get; set; }
+        public bool validUser { get; set; }
+    }
     public class LoginInfo
     {
         public string dealerid { get; set; }

@@ -54,7 +54,7 @@ namespace UrbanScienceCapstone.Controllers
                 //just copied code below calling needed kpis, definitely refactor
                 List<Kpi> most_needed_kpis = new List<Kpi>();
 
-                string url = $"{VDA_API_URL}/NeededKpi?dealer_name={Uri.EscapeDataString(info.dealerid)}";
+                string url = $"{VDA_API_URL}/VerifyLogin?dealer_name={Uri.EscapeDataString(info.dealerid)}";
                 var client = new HttpClient();
 
                 client.DefaultRequestHeaders.Accept.Clear();
@@ -116,60 +116,71 @@ namespace UrbanScienceCapstone.Controllers
 
             ViewBag.dealer_name = dealer_name;
 
-            try
+            //check if admin
+            string login_url = $"{VDA_API_URL}/VerifyLogin?dealer_name={Uri.EscapeDataString(dealer_name)}";
+            var credentials_client = new HttpClient();
+
+            credentials_client.DefaultRequestHeaders.Accept.Clear();
+            //add any default headers below this
+            credentials_client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+
+            HttpResponseMessage credentials_response = await credentials_client.GetAsync(login_url);
+
+            ViewBag.IsAdmin = false;
+
+            if (credentials_response.StatusCode == HttpStatusCode.OK)
             {
-                string url = $"{VDA_API_URL}/RelatedKpi?query={search}&dealer_name={dealer_name}";
-                var client = new HttpClient();
+                string json_string = await credentials_response.Content.ReadAsStringAsync();
+                LoginVerification login = JsonConvert.DeserializeObject<LoginVerification>(json_string);
+                ViewBag.IsAdmin = login.isAdmin;
+            }
 
-                client.DefaultRequestHeaders.Accept.Clear();
-                //add any default headers below this
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json"));
+            // do related kpi
 
-                HttpResponseMessage response = await client.GetAsync(url);
-                string json_string = await response.Content.ReadAsStringAsync();
+            string related_kpi_url = $"{VDA_API_URL}/RelatedKpi?query={search}&dealer_name={dealer_name}";
+            var related_kpi_client = new HttpClient();
+
+            related_kpi_client.DefaultRequestHeaders.Accept.Clear();
+            //add any default headers below this
+            related_kpi_client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+
+            HttpResponseMessage related_kpi_response = await related_kpi_client.GetAsync(related_kpi_url);
+
+            if (related_kpi_response.StatusCode == HttpStatusCode.OK)
+            {
+                string json_string = await related_kpi_response.Content.ReadAsStringAsync();
 
                 Kpi most_related_kpi = JsonConvert.DeserializeObject<Kpi>(json_string);
                 ViewBag.most_related_kpi = most_related_kpi;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
 
-            }
 
 
             // call web api to get action sending it kpi information
             //string needed_kpi_api_url = "http://localhost:65007/api/NeededKpi";
             List<Kpi> most_needed_kpis = new List<Kpi>();
 
-            try
+            
+            string needed_kpi_url = $"{VDA_API_URL}/NeededKpi?dealer_name={Uri.EscapeDataString(dealer_name)}";
+            var needed_kpi_client = new HttpClient();
+
+            needed_kpi_client.DefaultRequestHeaders.Accept.Clear();
+            //add any default headers below this
+            needed_kpi_client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+
+            HttpResponseMessage needed_kpi_response = await needed_kpi_client.GetAsync(needed_kpi_url);
+            
+            if(needed_kpi_response.StatusCode == HttpStatusCode.OK)
             {
-
-                string url = $"{VDA_API_URL}/NeededKpi?dealer_name={Uri.EscapeDataString(dealer_name)}";
-                var client = new HttpClient();
-
-                client.DefaultRequestHeaders.Accept.Clear();
-                //add any default headers below this
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json"));
-
-                HttpResponseMessage response = await client.GetAsync(url);
-                string json_string = await response.Content.ReadAsStringAsync();
-                //Kpi testKpi = JsonConvert.DeserializeObject<Kpi>(json_string);
-
-
-                //ViewBag.testKpi = testKpi;
-
+                string json_string = await needed_kpi_response.Content.ReadAsStringAsync();
                 most_needed_kpis = JsonConvert.DeserializeObject<List<Kpi>>(json_string);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-
+                ViewBag.needed_kpi_list = most_needed_kpis;
             }
 
-            ViewBag.needed_kpi_list = most_needed_kpis;
+            
             return View();
 
 
@@ -180,6 +191,7 @@ namespace UrbanScienceCapstone.Controllers
 
             ViewBag.dealer_name = dealer_name;
 
+            
 
             //KpiList kpi_list_object = JsonConvert.DeserializeObject<KpiList>(TempData["kpi_list"].ToString());
 
