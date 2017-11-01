@@ -53,7 +53,7 @@ namespace UrbanScienceCapstone.Models
     {
         public string search { get; set; }
     }
-
+    
     public class LoginVerification
     {
         public bool isAdmin { get; set; }

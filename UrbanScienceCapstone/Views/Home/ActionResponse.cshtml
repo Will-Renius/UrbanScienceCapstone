@@ -1,4 +1,116 @@
 ﻿
+ @*JS code*@ 
+<script src="https://code.jquery.com/jquery-3.1.1.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js">
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js">
+</script>
+<!--JS below-->
+<!--modal-->
+<script>
+
+    function sendEmail(caller) {
+        console.log(caller);
+        console.log(caller.parent());
+        console.log(caller.parent().siblings(".card-body"));
+        var result = caller.parent().siblings(".card-body").children(".card-text").html();
+        console.log(result);
+        $("#message_input").val(result);
+
+    };
+    function objectifyForm(formArray) {//serialize data function
+
+        var returnArray = {};
+        var entityLabels = [];
+        var currentEntity = {};
+        for (var i = 0; i < formArray.length; i++) {
+            returnArray[formArray[i]['name']] = formArray[i]['value'];   
+        }
+        returnArray["sender_email"] = "VDA@UrbanScienceCapstone.com";
+        returnArray["sender_name"] = "Virtual Dealership Adviser";
+
+        console.log(returnArray);
+        return returnArray;
+    }
+    function checkAnswer() {
+        //console.log("i've submitted something!");
+        //console.log($('#form1').serialize());
+
+        var data = JSON.stringify($("#form1").serializeArray());
+        console.log("form array");
+        console.log($("#form1").serializeArray()[0]);//  <-----------
+        var testdata = JSON.stringify(objectifyForm($("#form1").serializeArray()));
+        //"{ \"intentName\": \"None\",\"text\": null,\"entityLabels\": null}";
+        //console.log(testdata);
+        console.log(data);
+        $.ajax({
+            //"http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/Email"
+            //"http://localhost:65007/api/Email"
+            url: "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/Email",
+            type: "POST",
+            data: testdata,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function () {
+                var loc = jqxhr.getResponseHeader('Location');
+                var a = $('<a/>', { href: loc, text: loc });
+                $('#email_status').html(a);
+            },
+            error: function () {
+                $('#email_status').html("Error posting the update.");
+            }
+
+        });
+        //$location.url('/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"]);
+        //window.location.href = '/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"];
+        //location = '/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"];
+        return false;
+
+    };
+    
+</script>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Send Email</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div id="emailStatus"></div>
+            </div>
+            <form id="form1" onSubmit="return checkAnswer();">
+
+                <div class="modal-body">
+                    
+                        <div>
+                            <label for="receiver_email">Email</label>
+                        </div>
+                        <div>
+                            <input id="email_input" name="receiver_email" type="email" />
+                        </div>
+                        <div style="display:none;">
+                            <label for="message">Action Message</label>
+                        </div>
+                        <div style="display:none;">
+                            <input id="message_input" name="message" type="text" />
+                        </div>
+                        
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <div>
+                        <input class="btn btn-primary" type="submit" value="Submit" />
+                    </div>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
 <div class="center">
     @if(ViewBag.kpi_p_val < .50) { 
         <h2>@ViewBag.dealer_name, You are performing poorly on @ViewBag.kpi_name</h2>
@@ -29,6 +141,12 @@
                                 <p class="card-text">Your @ViewBag.kpi_name has a value of @ViewBag.kpi_value. @action.actionP</p>
                                 <a href="@Url.Action("Index", "Home")" class="btn btn-outline btn-info">Search Again</a>
                                 <a href="@action.actionLink" class="btn btn-outline btn-info">Take Action</a>
+                            </div>
+                            <div class="card-footer text-muted">
+                             
+
+                                <div class="span4 proj-div" data-toggle="modal" onclick= "sendEmail($(this))" data-target="#myModal">Send Email</div>
+
                             </div>
                         </div>
                     </div>
