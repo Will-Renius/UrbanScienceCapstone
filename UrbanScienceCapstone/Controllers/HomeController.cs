@@ -94,7 +94,7 @@ namespace UrbanScienceCapstone.Controllers
             }
             else
             {
-                return BadRequest();
+                return RedirectToAction("Login", "Home", new { error = true });
             }
         }
 
