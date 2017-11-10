@@ -28,8 +28,8 @@ namespace UrbanScienceCapstone.Controllers
 {
     public class HomeController : Controller
     {
-        const string VDA_API_URL = "http://localhost:65007/api/";
-        //const string VDA_API_URL = "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/";
+        //const string VDA_API_URL = "http://localhost:65007/api/";
+        const string VDA_API_URL = "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/";
         const string SessionKeyDealerName = "_DealerName";
         const string SessionKeyUsername = "_Username";
         const string SessionKeyPassword = "_Password";
