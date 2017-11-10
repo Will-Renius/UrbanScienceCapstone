@@ -39,6 +39,7 @@ namespace UrbanScienceCapstone.Models
         public double p_val { get; set; }
         public string segment { get; set; }
         public string brand { get; set; }
+        public string model { get; set; }
     }
     public class KpiAction
     {
@@ -58,7 +59,13 @@ namespace UrbanScienceCapstone.Models
     {
         public bool isAdmin { get; set; }
         public bool validUser { get; set; }
+        public string username { get; set; }
+        public string password { get; set; }
+        public string first_name { get; set; }
+        public string last_name { get; set; }
+        public string dealer_name { get; set; }
     }
+
     public class LoginInfo
     {
         public string dealerid { get; set; }

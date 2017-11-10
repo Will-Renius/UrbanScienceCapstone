@@ -28,11 +28,12 @@ namespace UrbanScienceCapstone.Controllers
 {
     public class HomeController : Controller
     {
-        //const string VDA_API_URL = "http://localhost:65007/api/";
-        const string VDA_API_URL = "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/";
-        const string SessionKeyDealerId = "_DealerId";
+        const string VDA_API_URL = "http://localhost:65007/api/";
+        //const string VDA_API_URL = "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/";
+        const string SessionKeyDealerName = "_DealerName";
+        const string SessionKeyUsername = "_Username";
+        const string SessionKeyPassword = "_Password";
 
-        
         public ActionResult Login(bool error)
         {
 
@@ -49,12 +50,11 @@ namespace UrbanScienceCapstone.Controllers
             //https://docs.microsoft.com/en-us/aspnet/web-api/overview/advanced/sending-html-form-data-part-1
             //https://www.exceptionnotfound.net/asp-net-mvc-demystified-modelstate/
 
-            if (ModelState.IsValid && !string.IsNullOrEmpty(info.dealerid))
+            if (ModelState.IsValid && !string.IsNullOrEmpty(info.dealerid) && !string.IsNullOrEmpty(info.password))
             {
                 //just copied code below calling needed kpis, definitely refactor
-                List<Kpi> most_needed_kpis = new List<Kpi>();
 
-                string url = $"{VDA_API_URL}/VerifyLogin?dealer_name={Uri.EscapeDataString(info.dealerid)}";
+                string url = $"{VDA_API_URL}/VerifyLogin?username={Uri.EscapeDataString(info.dealerid)}&password={Uri.EscapeDataString(info.password)}";
                 var client = new HttpClient();
 
                 client.DefaultRequestHeaders.Accept.Clear();
@@ -63,12 +63,28 @@ namespace UrbanScienceCapstone.Controllers
                     new MediaTypeWithQualityHeaderValue("application/json"));
 
                 HttpResponseMessage response = await client.GetAsync(url);
+                string json_string = await response.Content.ReadAsStringAsync();
 
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    HttpContext.Session.SetString(SessionKeyDealerId, info.dealerid);
-                    return RedirectToAction("Index", "Home");
+
+                    LoginVerification login_credentials = JsonConvert.DeserializeObject<LoginVerification>(json_string);
+                    if (login_credentials.validUser)
+                    {
+                        HttpContext.Session.SetString(SessionKeyDealerName, login_credentials.dealer_name);
+                        HttpContext.Session.SetString(SessionKeyUsername, login_credentials.username);
+
+                        HttpContext.Session.SetString(SessionKeyPassword, info.password);
+
+                        
+                        return RedirectToAction("Index", "Home");
+
+                    }
+                    else
+                    {
+                        return RedirectToAction("Login", "Home", new { error = true });
+                    }
                 }
                 else
                 {
@@ -87,7 +103,7 @@ namespace UrbanScienceCapstone.Controllers
         //swtichted iactionresult to ation result, may want to switch back
         public ActionResult Index()
         {
-            string dealer_name = HttpContext.Session.GetString(SessionKeyDealerId);
+            string dealer_name = HttpContext.Session.GetString(SessionKeyDealerName);
             ViewBag.dealer_name = dealer_name;
 
             return View();
@@ -112,12 +128,14 @@ namespace UrbanScienceCapstone.Controllers
 
             //get the most related kpi
             //string related_kpi_url = "http://localhost:65007/api/RelatedKpi";
-            string dealer_name = HttpContext.Session.GetString(SessionKeyDealerId);
+            string dealer_name = HttpContext.Session.GetString(SessionKeyDealerName);
+            string username = HttpContext.Session.GetString(SessionKeyUsername);
+            string password = HttpContext.Session.GetString(SessionKeyPassword);
 
             ViewBag.dealer_name = dealer_name;
 
             //check if admin
-            string login_url = $"{VDA_API_URL}/VerifyLogin?dealer_name={Uri.EscapeDataString(dealer_name)}";
+            string login_url = $"{VDA_API_URL}/VerifyLogin?username={Uri.EscapeDataString(username)}&password={Uri.EscapeDataString(password)}";
             var credentials_client = new HttpClient();
 
             credentials_client.DefaultRequestHeaders.Accept.Clear();
@@ -187,7 +205,7 @@ namespace UrbanScienceCapstone.Controllers
         }
         public async Task<ActionResult> ActionResponse(string kpi_name, int kpi_value, double kpi_p_val)
         {
-            string dealer_name = HttpContext.Session.GetString(SessionKeyDealerId);
+            string dealer_name = HttpContext.Session.GetString(SessionKeyDealerName);
 
             ViewBag.dealer_name = dealer_name;
 
@@ -198,31 +216,25 @@ namespace UrbanScienceCapstone.Controllers
             // call web api to get action sending it kpi information
             //string action_api_url = "http://localhost:65007/api/Actions";
             List<KpiAction> actions_to_take = new List<KpiAction>();
-            try
+
+            string url = $"{VDA_API_URL}/Actions?name={Uri.EscapeDataString(kpi_name)}&value={kpi_p_val}";
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Accept.Clear();
+            //add any default headers below this
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+
+            HttpResponseMessage response = await client.GetAsync(url);
+            if(response.StatusCode == HttpStatusCode.OK)
             {
-                string url = $"{VDA_API_URL}/Actions?name={Uri.EscapeDataString(kpi_name)}&value={kpi_value}";
-                var client = new HttpClient();
-
-                client.DefaultRequestHeaders.Accept.Clear();
-                //add any default headers below this
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json"));
-
-                HttpResponseMessage response = await client.GetAsync(url);
                 string json_string = await response.Content.ReadAsStringAsync();
-                //Kpi testKpi = JsonConvert.DeserializeObject<Kpi>(json_string);
-
-
-                //ViewBag.testKpi = testKpi;
 
                 actions_to_take = JsonConvert.DeserializeObject<List<KpiAction>>(json_string);
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
+           
 
-            }
-            //
+         
 
 
             ViewBag.action_list = actions_to_take;

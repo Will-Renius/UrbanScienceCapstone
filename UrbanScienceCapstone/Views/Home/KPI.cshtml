@@ -229,7 +229,7 @@
     string card_class = "";
     string card_text = "";
     string button_class = "";
-    <h2>Here is what we've found for: "@ViewBag.search"</h2>
+    <h2>Here is what I found for: "@ViewBag.search"</h2>
     <br />
     <hr />
     <br />
@@ -253,9 +253,14 @@
             card_text = $"You are performing above average in this measurement. However, you can always find ways to improve. Click the button below to view actions you can take to improve your {@ViewBag.most_related_kpi.name}";
             button_class = "btn btn-outline btn-success";
         }
-        
+        @{string brand = "";} 
+        @if (ViewBag.most_related_kpi.brand != "all") { brand = ViewBag.most_related_kpi.brand; }
+        @{ string model_name = "";}
+        @if (ViewBag.most_related_kpi.model != "all") { model_name = ViewBag.most_related_kpi.model; }
+        @{ string segment = "";}
+        @if (ViewBag.most_related_kpi.segment != "all") { segment = ViewBag.most_related_kpi.segment; }
         <div class="@(card_class)" style="max-width: 20rem;margin:auto;">
-            <div class="card-header">@ViewBag.most_related_kpi.brand @ViewBag.most_related_kpi.segment @ViewBag.most_related_kpi.name</div>
+            <div class="card-header">@brand @model_name @segment @ViewBag.most_related_kpi.name</div>
             <div class="card-body">
                 <h4 class="card-title">@ViewBag.most_related_kpi.value</h4>
                 <h6 class="card-subtitle mb-2 text-muted">@string.Format("kpi percentile {0:0.0%}", ViewBag.most_related_kpi.p_val)</h6>
@@ -280,20 +285,20 @@ else
 <hr />
 <br />
 @if (ViewBag.needed_kpi_list != null)
-{
-    string card_class = "";
-    string card_text = "";
-    string button_class = "";
+        {
+            string card_class = "";
+            string card_text = "";
+            string button_class = "";
             @foreach (var @kpi in ViewBag.needed_kpi_list)
             {
                 <div class="col-md-4" style="float:left;text-align:center">
 
                     @if (@kpi.p_val < 0.2)
-                    {
-                        card_class = "card border-danger mb-3";
-                        card_text = $"You are performing far below average on this measurement. Click the button below to view actions you can take to improve your {@kpi.name}";
-                        button_class = "btn btn-outline btn-danger";
-                    }
+        {
+            card_class = "card border-danger mb-3";
+            card_text = $"You are performing far below average on this measurement. Click the button below to view actions you can take to improve your {@kpi.name}";
+            button_class = "btn btn-outline btn-danger";
+        }
                     else if (@kpi.p_val < 0.5)
                     {
                         card_class = "card border-warning mb-3";
@@ -307,7 +312,7 @@ else
                         button_class = "btn btn-outline btn-success";
                      }
                     <div class="@(card_class)" style="max-width: 20rem;">
-                        <div class="card-header">@kpi.brand @kpi.segment @kpi.name</div>
+                        <div class="card-header">@kpi.brand @kpi.model @kpi.name</div>
                         <div class="card-body">
                             <h4 class="card-title">@kpi.value</h4>
                             <h6 class="card-subtitle mb-2 text-muted">@string.Format("kpi percentile {0:0.0%}", kpi.p_val)</h6>
@@ -326,7 +331,7 @@ else
     <br />
   }
 @if (ViewBag.IsAdmin)
-{
+        {
     <center>
         <h3>Not what you were looking for? Select the KPI you were looking for below</h3>
         <p>Highlight text to specify if there is a segment or dealer in your search</p>
@@ -368,8 +373,9 @@ else
             <div>
                 <input type="submit" value="Submit" />
             </div>
-            <a href="#" id="filldetails" onclick="addFields()">Add Entity</a>
+            <a id="filldetails" onclick="addFields()">Add Entity</a>
             <div id="container">
+
             </div>
         </form>
         @*<div class="center" style="margin:auto">
