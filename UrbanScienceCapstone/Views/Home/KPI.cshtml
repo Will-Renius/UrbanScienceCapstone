@@ -1,7 +1,7 @@
 ﻿<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
 
 <script  type="text/javascript">
-     
+    var test = [];
      function ShowSelection() {
          var textComponent = document.getElementById('search');
          var selectedText;
@@ -30,6 +30,8 @@
             startPos = textComponent.selectionStart;
             endPos = textComponent.selectionEnd;
             selectedText = textComponent.value.substring(startPos, endPos);
+            test.push(selectedText);
+            console.log(test);
         }
         // Container <div> where dynamic content will be placed
         var container = document.getElementById("container");
@@ -37,9 +39,9 @@
 
         //childElementCount can give number of child elements
         // Create 
-        var div = document.createElement("div")
+        var div = document.createElement("div");
         //var entityOptions = ["Filter::Segment", "Filter::Brand", "Filter::Model"] 
-        var entityOptions = ["Filter"]
+        var entityOptions = ["Filter"];
         div.appendChild(document.createTextNode("Entity Name"));
         var input = document.createElement("Select");
         input.name = "entityLabels[][entityName]";
@@ -131,9 +133,11 @@
          //console.log($('#form1').serialize());
 
          var data = JSON.stringify($("#form1").serializeArray());
-         console.log("form array");
-         console.log($("#form1").serializeArray()[0]);//  <-----------
+         //console.log("form array");
+         //console.log($("#form1").serializeArray()[0]);//  <-----------
          var testdata = JSON.stringify(objectifyForm($("#form1").serializeArray()));
+         //console.log(objectifyForm($("#form1")));
+         //console.log(objectifyForm($("#form1").serializeArray()));
          //"{ \"intentName\": \"None\",\"text\": null,\"entityLabels\": null}";
          //console.log(testdata);
          //console.log(data);
@@ -156,7 +160,8 @@
 
          });
          //$location.url('/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"]);
-         window.location.href = '/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"];
+         //console.log('/Home/Kpi?search=' + test.join(" ") + $("#form1").serializeArray()[0]["value"]);
+         window.location.href = '/Home/Kpi?search=' + test.join(" ") + $("#form1").serializeArray()[0]["value"];
          //location = '/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"];
          return false;
 
