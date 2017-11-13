@@ -139,7 +139,7 @@
          //console.log(objectifyForm($("#form1")));
          //console.log(objectifyForm($("#form1").serializeArray()));
          //"{ \"intentName\": \"None\",\"text\": null,\"entityLabels\": null}";
-         //console.log(testdata);
+         console.log(testdata);
          //console.log(data);
          $.ajax({
              //"http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis"
@@ -161,7 +161,7 @@
          });
          //$location.url('/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"]);
          //console.log('/Home/Kpi?search=' + test.join(" ") + $("#form1").serializeArray()[0]["value"]);
-         window.location.href = '/Home/Kpi?search=' + test.join(" ") + $("#form1").serializeArray()[0]["value"];
+         window.location.href = '/Home/Kpi?search=' + test.join(" ") +" " + $("#form1").serializeArray()[0]["value"];
          //location = '/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"];
          return false;
 

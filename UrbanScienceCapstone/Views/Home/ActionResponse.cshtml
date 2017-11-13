@@ -44,7 +44,7 @@
         console.log($("#form1").serializeArray()[0]);//  <-----------
         var testdata = JSON.stringify(objectifyForm($("#form1").serializeArray()));
         //"{ \"intentName\": \"None\",\"text\": null,\"entityLabels\": null}";
-        //console.log(testdata);
+        console.log(testdata);
         console.log(data);
         $.ajax({
             //"http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/Email"
@@ -67,9 +67,18 @@
         //$location.url('/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"]);
         //window.location.href = '/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"];
         //location = '/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"];
+        $("#modalClose").trigger("click");
+
         return false;
 
     };
+    $('#form1').submit(function () {
+
+        // submission stuff
+
+        $('#myModal').modal('hide');
+        return false;
+    });
     
 </script>
 
@@ -103,9 +112,9 @@
                         
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="modalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <div>
-                        <input class="btn btn-primary"  data-dismiss="modal" type="submit" value="Submit" />
+                        <input class="btn btn-primary" type="submit" value="Submit" />
                     </div>
                 </div>
             </form>
