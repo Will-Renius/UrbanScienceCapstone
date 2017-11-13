@@ -317,7 +317,7 @@ else
                         card_text = $"You are performing above average in this measurement. However, you can always find ways to improve. Click the button below to view actions you can take to improve your {@kpi.name}";
                         button_class = "btn btn-outline btn-success";
                      }
-                    <div class="@(card_class)" style="max-width: 20rem;">
+                    <div class="@(card_class)" style="max-width: 20rem; min-height:350px;">
                         <div class="card-header">@kpi.brand @kpi.model @kpi.name</div>
                         <div class="card-body">
                             <h4 class="card-title">@kpi.value</h4>
@@ -356,7 +356,7 @@ else
             </div>
         </div>*@
     <br />
-        <form id="form1" onSubmit="return checkAnswer();">
+        <form id="form1" onSubmit="return checkAnswer();" style="text-align:center;">
             <div>
                 <label for="intentName">Intent Name</label>
             </div>
