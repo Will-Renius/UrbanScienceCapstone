@@ -84,4 +84,8 @@
     <None Include="wwwroot\SpeechToText-WebSockets-Javascript-master\_config.yml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\ActionItemImg\" />
+  </ItemGroup>
+
 </Project>
