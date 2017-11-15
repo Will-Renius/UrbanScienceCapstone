@@ -5,30 +5,72 @@
     ViewData["Title"] = "Login";
 }
 
-
-
-<div class="center" style="text-align:center;">
-    @if (ViewBag.error)
-    {
-        <h3 style="color:red">Incorrect Username or Password</h3>
-
+<style>
+    
+    input:not([type = submit]) {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
     }
-    <h2>
-        Login
+
+    input[type=submit] {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    input[type=submit]:hover {
+        background-color: #45a049;
+    }
+    div {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+        align-items: center;
+    }
+    div .form{
+        border-radius: 5px;
+        background-color: #dbf1cb;
+        padding: 20px;
+        text-align: center;
+        margin: auto;
+    }
+</style>
+
+<div class="main" style="text-align:center;">
+    <h2 style="margin-bottom:5rem";>
+        Welcome to the Virtual Dealership Adviser
     </h2>
+    <div class="form" style="width: 50%">
+        <form action="~/home/verifylogin" method="post" name="LoginForm" >
 
-    <p>
-        Please enter in your user name and password...
-    </p>
+            <label for="dealerid">
+                Dealer Id:
+                <input type="text" name="dealerid" /><br />
+            </label>
 
+            <label for="password">
+                Password:
+                <input type="password" name="password" /><br />
+            </label> 
 
-    <form action="~/home/verifylogin" method="post" name="LoginForm">
-        Dealer Id:<br />
-        <input type="text" name="dealerid" /><br />
-        Password:<br />
-        <input type="password" name="password" /><br />
-        <input type="submit" />
-    </form>
+            <input type="submit" />
+            @if (ViewBag.error)
+            {
+                <p style="color:red">Incorrect Username or Password</p>
+
+            }
+        </form>
+    </div>
 </div>
 @*<script type="text/javascript">
     $("#LoginForm").submit(function () {
