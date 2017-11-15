@@ -124,36 +124,30 @@
 </div>
 <div class="center">
     @if(ViewBag.kpi_p_val < .50) { 
-        <h2>@ViewBag.dealer_name, You are performing poorly on @ViewBag.kpi_name</h2>
-        <br />
+        <h2 style="text-align:center">@ViewBag.dealer_name is performing poorly on @ViewBag.kpi_name</h2>
         <hr />
-        <br />
         <p>Look at the actions below for tips on improving your performance</p>
     }else{ 
-        <h2>@ViewBag.dealer_name, You are performing well in @ViewBag.kpi_name</h2>
-        <br />
+        <h2 style="text-align:center">@ViewBag.dealer_name is performing well in @ViewBag.kpi_name</h2>
         <hr />
-        <br />
         <p>Improvements can still be made, look at the actions below for tips on improving your performance </p>
     }
-    <br />
     <hr />
-    <br />
     <div class="center">
         <div>
             @{ var count = 1; }
             @foreach (var action in ViewBag.action_list)
             {
                
-                    <div class="action-card card border-info mb-3">
-                        <div class="card-block">
+                    <div class="action-card card border-info mb-3" style="text-align:center">
+                        <div class="card-block" style="text-align:center">
                             <div class="card-header">Action @count</div>
                             <div class="card-body">
                                 <p class="card-text">Your @ViewBag.kpi_name has a value of @ViewBag.kpi_value. @action.actionP</p>
                                 <a href="@Url.Action("Index", "Home")" class="btn btn-outline btn-info">Search Again</a>
                                 <a href="@action.actionLink" class="btn btn-outline btn-info take-action">Take Action</a>
                             </div>
-                            <div class="card-footer text-muted">
+                            <div class="card-footer text-muted" style="text-align:center">
                              
 
                                 <div class="span4 proj-div" data-toggle="modal" onclick= "sendEmail($(this))" data-target="#myModal">Send Email</div>

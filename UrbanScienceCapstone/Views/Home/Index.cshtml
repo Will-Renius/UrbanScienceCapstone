@@ -9,10 +9,11 @@
         
         
         <img id="img_logo" alt="logo" src="~/images/urban_science.jpg" />
-        <h1>Welcome to the Virtual Dealership Adviser! Hello @ViewBag.dealer_name</h1>
+        <h1>Welcome to the @ViewBag.dealer_name Virtual Dealership Adviser!</h1>
+        <h2>Hello @ViewBag.first_name @ViewBag.last_name</h2>
         
         @model UrbanScienceCapstone.Models.Search
-        @using (Html.BeginForm("KPi", "Home", FormMethod.Post))
+        @using (Html.BeginForm("KPI", "Home", FormMethod.Post))
         {
             
             @Html.TextBoxFor(model => model.search, new { @id = "searchbox", @class = "form-control text-box col-xs-2" })

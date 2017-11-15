@@ -33,6 +33,9 @@ namespace UrbanScienceCapstone.Controllers
         const string SessionKeyDealerName = "_DealerName";
         const string SessionKeyUsername = "_Username";
         const string SessionKeyPassword = "_Password";
+        const string SessionKeyFirstName = "_FirstName";
+        const string SessionKeyLastName = "_LastName";
+
 
         public ActionResult Login(bool error)
         {
@@ -74,6 +77,8 @@ namespace UrbanScienceCapstone.Controllers
                     {
                         HttpContext.Session.SetString(SessionKeyDealerName, login_credentials.dealer_name);
                         HttpContext.Session.SetString(SessionKeyUsername, login_credentials.username);
+                        HttpContext.Session.SetString(SessionKeyFirstName, login_credentials.first_name);
+                        HttpContext.Session.SetString(SessionKeyLastName, login_credentials.last_name);
 
                         HttpContext.Session.SetString(SessionKeyPassword, info.password);
 
@@ -104,8 +109,11 @@ namespace UrbanScienceCapstone.Controllers
         public ActionResult Index()
         {
             string dealer_name = HttpContext.Session.GetString(SessionKeyDealerName);
-            ViewBag.dealer_name = dealer_name;
+            ViewBag.first_name = HttpContext.Session.GetString(SessionKeyFirstName);
+            ViewBag.last_name = HttpContext.Session.GetString(SessionKeyLastName);
 
+            ViewBag.dealer_name = dealer_name;
+            
             return View();
         }
 
