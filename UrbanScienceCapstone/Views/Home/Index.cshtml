@@ -1,4 +1,23 @@
-﻿
+﻿<style>
+    .center {
+        text-align: center;
+        margin: auto;
+        width: 100%;
+        height:90%;
+        transform:translateY(10%)
+    }
+    body {
+       background-color: #f0f0f0;
+    }
+    #img_logo{
+        max-width:300px;
+    }
+    #searchbox {
+        max-width: 800px;
+        margin: auto;
+        margin-top: 10px;
+    }
+</style>
 <body>
 
 
@@ -8,17 +27,28 @@
         }
         
         
-        <img id="img_logo" alt="logo" src="~/images/urban_science.jpg" />
-        <h1>Welcome to the @ViewBag.dealer_name Virtual Dealership Adviser!</h1>
-        <h2>Hello @ViewBag.first_name @ViewBag.last_name</h2>
+        <img id="img_logo" alt="logo" src="~/images/UsLogoTransparantBlack.png" />
+        @* <h1> Virtual Dealership Adviser</h1>*@
+       @* <h1>Welcome to the @ViewBag.dealer_name Virtual Dealership Adviser!</h1>*@
+       @* <h2>Hello @ViewBag.first_name @ViewBag.last_name</h2>*@
         
         @model UrbanScienceCapstone.Models.Search
         @using (Html.BeginForm("KPI", "Home", FormMethod.Post))
         {
-            
-            @Html.TextBoxFor(model => model.search, new { @id = "searchbox", @class = "form-control text-box col-xs-2" })
-            @Html.ValidationMessageFor(model => model.search)
+            <div class="input-group">
 
+
+                @Html.TextBoxFor(model => model.search, new { @id = "searchbox", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.search)
+                @*<button type="button" id="startBtn" class="btn btn-success input-group-addon">
+                    <i class="fa fa-microphone" aria-hidden="true"></i>
+                </button>
+                <button type="button" id="stopBtn" class="btn btn-danger input-group-addon">
+                    <i class="fa fa-microphone-slash" aria-hidden="true"></i>
+                </button>*@
+               @* <span class="input-group-addon">.00</span>*@
+
+            </div>
             <div class="search-buttons" style="margin-top:15px">     
 
                 <button type="button" id="startBtn" class="btn btn-success">

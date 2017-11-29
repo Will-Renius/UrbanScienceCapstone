@@ -40,14 +40,25 @@
         </div>
     </div>
 </nav>*@
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2017 - UrbanScienceCapstone</p>
-        </footer>
-    </div>
+    <nav  class="navbar top" style="background-color:#B39556 ">
 
+        <h1 style="margin:auto; color:#fff">
+            Virtual Dealership Adviser
+        </h1>
+           
+    </nav>
+    @RenderBody()
+    
+    <footer class="card-footer bottom" style="background-color:#B39556">
+        <p style="color:#fff">&copy; 2017 - UrbanScienceCapstone</p>
+    </footer>
+    @*<div class="container body-content">
+        @RenderBody()
+        <hr />*@
+    @*<footer>
+            <p>&copy; 2017 - UrbanScienceCapstone</p>
+        </footer>*@
+    @*</div>*@
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"  media="screen" runat="server"></script>

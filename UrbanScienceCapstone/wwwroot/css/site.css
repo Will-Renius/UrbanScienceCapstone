@@ -1,8 +1,25 @@
-﻿body {
-    padding-top: 50px;
+﻿html, body {
+    /*padding-top: 50px;*/
     padding-bottom: 20px;
+    height: 100%;
 }
 
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+    color: #ffffff;
+    background-color: #3276b1;
+    border-color: #285e8e;
+}
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active,
+.btn-danger.active {
+    color: #ffffff;
+    background-color: #3276b1;
+    border-color: #285e8e;
+}
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {

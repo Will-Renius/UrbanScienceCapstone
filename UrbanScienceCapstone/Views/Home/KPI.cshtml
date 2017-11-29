@@ -2,350 +2,206 @@
 
 <script  type="text/javascript">
     var test = [];
-     function ShowSelection() {
-         var textComponent = document.getElementById('search');
-         var selectedText;
-
-         if (textComponent.selectionStart !== undefined) {// Standards Compliant Version
-             var startPos = textComponent.selectionStart;
-             var endPos = textComponent.selectionEnd;
-             selectedText = textComponent.value.substring(startPos, endPos);
-         }
-         else if (document.selection !== undefined) {// IE Version
-             textComponent.focus();
-             var sel = document.selection.createRange();
-             selectedText = sel.text;
-         }
-
-         console.log("You selected: " + selectedText);
-    }
-
-    function addFields() {
+    function ShowSelection() {
         var textComponent = document.getElementById('search');
-        console.log(textComponent);
         var selectedText;
-        var startPos = 0;
-        var endPos = 0;
+
         if (textComponent.selectionStart !== undefined) {// Standards Compliant Version
-            startPos = textComponent.selectionStart;
-            endPos = textComponent.selectionEnd;
+            var startPos = textComponent.selectionStart;
+            var endPos = textComponent.selectionEnd;
             selectedText = textComponent.value.substring(startPos, endPos);
-            test.push(selectedText);
-            console.log(test);
         }
-        // Container <div> where dynamic content will be placed
-        var container = document.getElementById("container");
-        // Clear previous contents of the container
-
-        //childElementCount can give number of child elements
-        // Create 
-        var div = document.createElement("div");
-        //var entityOptions = ["Filter::Segment", "Filter::Brand", "Filter::Model"] 
-        var entityOptions = ["Filter"];
-        div.appendChild(document.createTextNode("Entity Name"));
-        var input = document.createElement("Select");
-        input.name = "entityLabels[][entityName]";
-        
-        for (i in entityOptions) {
-            var opt = document.createElement("option");
-            opt.value = entityOptions[i];
-            //opt.innerHTML = entity; // whatever property it has
-            opt.appendChild(document.createTextNode(entityOptions[i]))
-            // then append it to the select element
-            input.appendChild(opt);
-
-        }
-        div.appendChild(input);
-
-
-        //Location::From
-
-        div.appendChild(document.createTextNode("Start Index"));
-        var input = document.createElement("input");
-        input.type = "number";
-        input.name = "entityLabels[][startCharIndex]";
-        input.value = startPos;
-        div.appendChild(input);
-
-        div.appendChild(document.createTextNode("End Index"));
-        var input = document.createElement("input");
-        input.type = "number";
-        input.name = "entityLabels[][endCharIndex]";
-        input.value = endPos;
-        div.appendChild(input);
-
-        var button = document.createElement("button");
-        button.innerHTML = "remove";
-        button.className = "removeButton";
-        button.type = "button";
-        button.onclick = function () {
-            //$(this).parent().css("background-color", "red");
-
-            $(this).parent().remove(); return false;
-        };
-        // 2. Append somewhere
-        div.appendChild(button);
-
-
-        //
-        // Append a line break 
-        container.appendChild(div);
-
-        container.appendChild(document.createElement("br"));
-        
     }
-
-
-     function objectifyForm(formArray) {//serialize data function
-
-         var returnArray = {};
-         var entityLabels = [];
-         var currentEntity = {};
-         for (var i = 0; i < formArray.length; i++) {
-             
-             //console.log(formArray[i])
-             var splitName = formArray[i]["name"].split("[]");
-             if (splitName[0] == "entityLabels") {
-                 var name = splitName[1].replace("[", "").replace("]", "");
-                 currentEntity[name] = formArray[i]['value'];
-                 console.log("current entity");
-                 console.log(currentEntity);
-                 if (Object.keys(currentEntity).length == 3) {
-                     entityLabels.push(currentEntity);
-                     currentEntity = {};
-                 }
-
-             }
-             else {
-
-                 returnArray[formArray[i]['name']] = formArray[i]['value'];
-
-             }
-             //console.log(formArray[i]["name"].split("[]")[0])
-
-         }
-         returnArray["entityLabels"] = entityLabels;
-         console.log(returnArray);
-         return returnArray;
-    }
-     function checkAnswer() {
-         //console.log("i've submitted something!");
-         //console.log($('#form1').serialize());
-
-         var data = JSON.stringify($("#form1").serializeArray());
-         //console.log("form array");
-         //console.log($("#form1").serializeArray()[0]);//  <-----------
-         var testdata = JSON.stringify(objectifyForm($("#form1").serializeArray()));
-         //console.log(objectifyForm($("#form1")));
-         //console.log(objectifyForm($("#form1").serializeArray()));
-         //"{ \"intentName\": \"None\",\"text\": null,\"entityLabels\": null}";
-         console.log(testdata);
-         //console.log(data);
-         $.ajax({
-             //"http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis"
-             //"http://localhost:65007/api/UpdateLuis"
-             url: "https://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis",
-             type: "POST",
-             data: testdata,
-             contentType: "application/json; charset=utf-8",
-             dataType: "json",
-             success: function () {
-                 var loc = jqxhr.getResponseHeader('Location');
-                 var a = $('<a/>', { href: loc, text: loc });
-                 $('#message').html(a);
-             },
-             error: function () {
-                 $('#message').html("Error posting the update.");
-             }
-
-         });
-         //$location.url('/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"]);
-         //console.log('/Home/Kpi?search=' + test.join(" ") + $("#form1").serializeArray()[0]["value"]);
-         window.location.href = '/Home/Kpi?search=' + test.join(" ") +" " + $("#form1").serializeArray()[0]["value"];
-         //location = '/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"];
-         return false;
-
-     };
-     $(document).ready(function () {
-         
-         //var checkAnswer = function () {
-         //    //console.log("i've submitted something!");
-         //    //console.log($('#form1').serialize());
-             
-         //    var data = JSON.stringify($("#form1").serializeArray()); //  <-----------
-         //    var testdata = JSON.stringify(objectifyForm($("#form1").serializeArray()));
-         //        //"{ \"intentName\": \"None\",\"text\": null,\"entityLabels\": null}";
-         //    //console.log(testdata);
-         //    //console.log(data);
-         //    $.ajax({
-         //        //"http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis"
-         //        //"http://localhost:65007/api/UpdateLuis"
-         //        url: "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis",
-         //        type: "POST",
-         //        data: testdata,
-         //        contentType: "application/json; charset=utf-8",
-         //        dataType: "json",
-         //        success: function () {
-         //            var loc = jqxhr.getResponseHeader('Location');
-         //            var a = $('<a/>', { href: loc, text: loc });
-         //            $('#message').html(a);
-         //        },
-         //        error: function () {
-         //            $('#message').html("Error posting the update.");
-         //        }
-                  
-         //    });
-             
-         //};
-     });
-     //var jqxhr = $.post('http://localhost:65007/api/UpdateLuis', $('#form1').serialize())
-     //    .success(function () {
-     //        var loc = jqxhr.getResponseHeader('Location');
-     //        var a = $('<a/>', { href: loc, text: loc });
-     //        $('#message').html(a);
-     //    })
-     //    .error(function () {
-     //        $('#message').html("Error posting the update.");
-     //    });
-     //return false;
+    
 </script>
-@*<script type="text/javascript">
-     $("#form1").submit(function () {
-         var jqxhr = $.post('http://localhost:65007/api/UpdateLuis', $('#form1').serialize())
-             .success(function () {
-                 var loc = jqxhr.getResponseHeader('Location');
-                 var a = $('<a/>', { href: loc, text: loc });
-                 $('#message').html(a);
-             })
-             .error(function () {
-                 $('#message').html("Error posting the update.");
-             });
-         return false;
-     });
-</script>*@
-
-
-<h1 style="text-align:center">@ViewBag.dealer_name, select a potential area for improvement</h1>
-<hr />
-
-@if (ViewBag.most_related_kpi != null)
-{
-    string card_class = "";
-    string card_text = "";
-    string button_class = "";
-    string value_class = "";
-    <h2 style="text-align:center">Here is what I found for:</h2>
-    <h3 style="text-align:center">"@ViewBag.search"</h3>
-    <hr />
-
-    <div class="center" style="text-align:center;">
-        @if (@ViewBag.most_related_kpi.p_val < 0.2)
-        {
-            card_class = "card border-danger mb-3";
-            card_text = $"You are performing far below average on this measurement. Click the button below to view actions you can take to improve your {@ViewBag.most_related_kpi.name}";
-            button_class = "btn btn-outline btn-danger";
-            value_class = "Bad";
+<style>
+    .card{
+        margin:auto;
+    }
+    .needed-section {
+        background-color: #E6DED3;
+        padding:30px;
+        text-align:center;
+    }
+    .related-section {
+        background-color: #f0f0f0;
+        padding:30px;
+    }
+    .admin-content {
+        background-color: #f0f0f0;
+        padding: 30px;
+    }
+    .card-header {
+        background-color: #B39556;
+        color:#fff;
+    }
+    .Bad {
+        color: #FF7533;
+    }
+    .Okay {
+        color: #009FC2;
+    }
+    .Good {
+        color: #70C82F
+    }
+    /*info button recolor*/
+        .btn-info:hover,
+        .btn-info:focus,
+        .btn-info:active,
+        .btn-info.active {
+            color: #000;
+            background-color: #a9a9a9;
+            border-color: #676666;
         }
-        else if (@ViewBag.most_related_kpi.p_val < 0.5)
+
+    .btn-info {
+        color: #000;
+        background-color: #DCDCDC;
+        border-color: #a9a9a9;
+    }
+
+    .border-info {
+        color: #FF7533;
+    }
+</style>
+
+
+<div class="content-wrapper">
+    <div class="related-section">
+        @if (ViewBag.most_related_kpi != null)
         {
-            card_class = "card border-warning mb-3";
-            card_text = $"You are performing below average on this measurement. Click the button below to view actions you can take to improve your {@ViewBag.most_related_kpi.name}";
-            button_class = "btn btn-outline btn-warning";
-            value_class = "Okay";
+            string card_class = "card mb-3";
+            string card_text = "";
+            string button_class = "btn btn-outline btn-info";
+            string value_class = "";
+            <div class="related-header">
+                <h2 style="text-align:center">Here is what I found for:</h2>
+                <h3 style="text-align:center">"@ViewBag.search"</h3>
+            </div>
+           
+            <hr />
+
+            <div class="related-kpi" style="text-align:center;">
+                @if (@ViewBag.most_related_kpi.p_val < 0.2)
+                {
+                    //card_class = "card border-danger mb-3";
+                    card_text = $"You are performing far below average on this measurement. Click the button below to view actions you can take to improve your {@ViewBag.most_related_kpi.name}";
+                    //button_class = "btn btn-outline btn-danger";
+                    value_class = "Bad";
+
+                }
+                else if (@ViewBag.most_related_kpi.p_val < 0.5)
+                {
+                    //card_class = "card border-warning mb-3";
+                    card_text = $"You are performing below average on this measurement. Click the button below to view actions you can take to improve your {@ViewBag.most_related_kpi.name}";
+                    //button_class = "btn btn-outline btn-warning";
+                    value_class = "Okay";
+
+                }
+                else
+                {
+                    //card_class = "card border-success mb-3";
+                    card_text = $"You are performing above average in this measurement. However, you can always find ways to improve. Click the button below to view actions you can take to improve your {@ViewBag.most_related_kpi.name}";
+                    //button_class = "btn btn-outline btn-success";
+                    value_class = "Good";
+
+                }
+                @{string brand = "";}
+                @if (ViewBag.most_related_kpi.brand != "all") { brand = ViewBag.most_related_kpi.brand; }
+                @{ string model_name = "";}
+                @if (ViewBag.most_related_kpi.model != "all") { model_name = ViewBag.most_related_kpi.model; }
+                @{ string segment = "";}
+                @if (ViewBag.most_related_kpi.segment != "total") { segment = ViewBag.most_related_kpi.segment; }
+                <div class="@(card_class)" style="max-width: 20rem;margin:auto;">
+                    <div class="card-header">@brand @model_name @segment @ViewBag.most_related_kpi.name</div>
+                    <div class="card-body">
+                        <h4 class="card-title">@string.Format("Percentile: {0:0.0%}", ViewBag.most_related_kpi.p_val)</h4>
+                        <h6 class="card-subtitle mb-2 @value_class">@value_class</h6>
+                        <p class="card-text">@card_text </p>
+                        <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @ViewBag.most_related_kpi.name, kpi_value = @ViewBag.most_related_kpi.value, kpi_p_val = @ViewBag.most_related_kpi.p_val })" class="@(button_class)">View Actions</a>
+                    </div>
+                </div>
+
+            </div>
+                    //btn-lg btn-block
+
+                   
 
         }
         else
         {
-            card_class = "card border-success mb-3";
-            card_text = $"You are performing above average in this measurement. However, you can always find ways to improve. Click the button below to view actions you can take to improve your {@ViewBag.most_related_kpi.name}";
-            button_class = "btn btn-outline btn-success";
-            value_class = "Good";
+            <div class="no-related-section">
+                <h2 style="text-align:center">I couldn't find anything for:</h2>
+                <h3 style="text-align:center">"@ViewBag.search"</h3>
+                <p style="text-align:center;"> See below to view your most needed areas of improvement, or try re-phrasing your question.</p>
 
-        }
-        @{string brand = "";} 
-        @if (ViewBag.most_related_kpi.brand != "all") { brand = ViewBag.most_related_kpi.brand; }
-        @{ string model_name = "";}
-        @if (ViewBag.most_related_kpi.model != "all") { model_name = ViewBag.most_related_kpi.model; }
-        @{ string segment = "";}
-        @if (ViewBag.most_related_kpi.segment != "total") { segment = ViewBag.most_related_kpi.segment; }
-        <div class="@(card_class)" style="max-width: 20rem;margin:auto;">
-            <div class="card-header">@brand @model_name @segment @ViewBag.most_related_kpi.name</div>
-            <div class="card-body">
-                <h4 class="card-title">@string.Format("Percentile: {0:0.0%}", ViewBag.most_related_kpi.p_val)</h4>
-                <h6 class="card-subtitle mb-2 text-muted">@value_class</h6>
-                <p class="card-text">@card_text </p>
-                <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @ViewBag.most_related_kpi.name, kpi_value = @ViewBag.most_related_kpi.value, kpi_p_val = @ViewBag.most_related_kpi.p_val })" class="@(button_class)">View Actions</a>
             </div>
-        </div>
+                        
+        }
 
     </div>
-    //btn-lg btn-block
 
-    <p style="text-align:center;">Look below to see your most needed areas of improvement</p>
+    @*<p style="text-align:center;">Look below to see your most needed areas of improvement</p>*@
 
-}
-else
-{
-    <p style="text-align:center;"> We couldn't find what you were looking for. See below to view your most needed areas of improvement, or try re-phrasing your question</p>
+    <div class="needed-section">
+        <h1>Needed Areas of Improvement</h1>
+        <p>Below are your most needed areas of improvement, these areas offer the greatest potential to improve.</p>
+        <br />
+        @if (ViewBag.needed_kpi_list != null)
+        {
+            string card_class = "card  mb-3";
+            string card_text = "";
+            string button_class = "btn btn-outline  btn-info";
+            string value_class = "";
 
-}
-
-<br />
-<hr />
-<br />
-@if (ViewBag.needed_kpi_list != null)
-{
-    string card_class = "";
-    string card_text = "";
-    string button_class = "";
-    string value_class = "";
-
-    @foreach (var @kpi in ViewBag.needed_kpi_list)
+            @foreach (var @kpi in ViewBag.needed_kpi_list)
             {
                 <div class="col-md-4" style="float:left;text-align:center">
 
                     @if (@kpi.p_val < 0.2)
                     {
-                        card_class = "card border-danger mb-3";
+                        //card_class = "card border-danger mb-3";
                         card_text = $"You are performing far below average on this measurement. Click the button below to view actions you can take to improve your {@kpi.name}";
-                        button_class = "btn btn-outline btn-danger";
+                        //button_class = "btn btn-outline btn-danger";
                         value_class = "Bad";
                     }
                     else if (@kpi.p_val < 0.5)
                     {
-                        card_class = "card border-warning mb-3";
+                        //card_class = "card border-warning mb-3";
                         card_text = $"You are performing below average on this measurement. Click the button below to view actions you can take to improve your {@kpi.name}";
-                        button_class = "btn btn-outline btn-warning";
+                        //button_class = "btn btn-outline btn-warning";
                         value_class = "Okay";
                     }
                     else
                     {
-                        card_class = "card border-success mb-3";
+                        //card_class = "card border-success mb-3";
                         card_text = $"You are performing above average in this measurement. However, you can always find ways to improve. Click the button below to view actions you can take to improve your {@kpi.name}";
-                        button_class = "btn btn-outline btn-success";
+                        //button_class = "btn btn-outline btn-success";
                         value_class = "Good";
                     }
                     <div class="@(card_class)" style="max-width: 20rem; min-height:350px;">
                         <div class="card-header">@kpi.brand @kpi.model @kpi.name</div>
                         <div class="card-body">
                             <h4 class="card-title">@string.Format("Percentile: {0:0.0%}", kpi.p_val)</h4>
-                            <h6 class="card-subtitle mb-2 text-muted">@value_class</h6>
+                            <h6 class="card-subtitle mb-2 @value_class">@value_class</h6>
                             <p class="card-text">@card_text</p>
                             <a href="@Url.Action("ActionResponse", "Home", new { kpi_name = @kpi.name, kpi_value = @kpi.value, kpi_p_val = @kpi.p_val })" class="@(button_class)">View Actions</a>
                         </div>
                     </div>
-                
+
                 </div>
             }
-    <div style="clear:both">
+            <div style="clear:both">
+            </div>
 
+        }
     </div>
-    <br />
-    <hr />
-    <br />
-  }
+
+
+</div>
 @if (ViewBag.IsAdmin)
         {
+    <div class="admin-content">
     <center>
         <h3>Not what you were looking for? Select the KPI you were looking for below</h3>
         <p>Highlight text to specify if there is a segment or dealer in your search</p>
@@ -363,7 +219,6 @@ else
                 <a class="dropdown-item" href="@Url.Action("Index", "UpdateLuisAndSearch", new { intent = "None" })">None</a>
             </div>
         </div>*@
-    <br />
         <form id="form1" onSubmit="return checkAnswer();" style="text-align:center;">
             <div>
                 <label for="intentName">Intent Name</label>
@@ -382,12 +237,25 @@ else
                 <label for="text">Question</label>
             </div>
             <div>
-                <input style="width:100%" id="search" name="text" type="text" value="@ViewBag.search" />
+                <div class="input-group">
+                    <input class="form-control" style="margin:auto;max-width:500px;" id="search" name="text" type="text" value="@ViewBag.search" />
+
+                   
+                    @*<button type="button" id="startBtn" class="btn btn-success input-group-addon">
+                <i class="fa fa-microphone" aria-hidden="true"></i>
+            </button>
+            <button type="button" id="stopBtn" class="btn btn-danger input-group-addon">
+                <i class="fa fa-microphone-slash" aria-hidden="true"></i>
+            </button>*@
+                    @* <span class="input-group-addon">.00</span>*@
+
+                </div>
+               
             </div>
             <div>
-                <input type="submit" value="Submit" />
+                <input  class="btn btn-outline btn-info" type="submit" value="Submit" />
             </div>
-            <a id="filldetails" onclick="addFields()">Add Entity</a>
+            <a class="btn btn-outline btn-info" id="filldetails" onclick="addFields()">Add Entity</a>
             <div id="container">
 
             </div>
@@ -423,14 +291,18 @@ else
                 }
             </div>*@
 
-
+    </div>
 }
+
 else
 {
-    <center>
-        <h3>Not what you were looking for? Try re-phrasing your question and try again.</h3>
-        <a href="@Url.Action("Index", "Home")" class="btn btn-outline btn-info">Try Again</a>
-    </center>
+    <div class="retry-section">
+        <center>
+            <h3>Not what you were looking for? Try re-phrasing your question and try again.</h3>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-outline btn-info">Try Again</a>
+        </center>
+    </div>
+    
 
 }
     
