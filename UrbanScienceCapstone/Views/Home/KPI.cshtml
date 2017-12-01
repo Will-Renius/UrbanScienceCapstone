@@ -1,7 +1,6 @@
 ﻿<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
 
 <script  type="text/javascript">
-    var test = [];
     function ShowSelection() {
         var textComponent = document.getElementById('search');
         var selectedText;
@@ -11,7 +10,197 @@
             var endPos = textComponent.selectionEnd;
             selectedText = textComponent.value.substring(startPos, endPos);
         }
+        else if (document.selection !== undefined) {// IE Version
+            textComponent.focus();
+            var sel = document.selection.createRange();
+            selectedText = sel.text;
+        }
+
+        console.log("You selected: " + selectedText);
     }
+
+    function addFields() {
+        var textComponent = document.getElementById('search');
+        console.log(textComponent);
+        var selectedText;
+        var startPos = 0;
+        var endPos = 0;
+        if (textComponent.selectionStart !== undefined) {// Standards Compliant Version
+            startPos = textComponent.selectionStart;
+            endPos = textComponent.selectionEnd;
+            selectedText = textComponent.value.substring(startPos, endPos);
+        }
+        // Container <div> where dynamic content will be placed
+        var container = document.getElementById("container");
+        // Clear previous contents of the container
+
+        //childElementCount can give number of child elements
+        // Create 
+        var div = document.createElement("div")
+        var entityOptions = ["Filter::Segment", "Filter::Brand", "Filter::Model"]
+        div.appendChild(document.createTextNode("Entity Name"));
+        var input = document.createElement("Select");
+        input.name = "entityLabels[][entityName]";
+
+        for (i in entityOptions) {
+            var opt = document.createElement("option");
+            opt.value = entityOptions[i];
+            //opt.innerHTML = entity; // whatever property it has
+            opt.appendChild(document.createTextNode(entityOptions[i]))
+            // then append it to the select element
+            input.appendChild(opt);
+
+        }
+        div.appendChild(input);
+
+
+        //Location::From
+
+        div.appendChild(document.createTextNode("Start Index"));
+        var input = document.createElement("input");
+        input.type = "number";
+        input.name = "entityLabels[][startCharIndex]";
+        input.value = startPos;
+        div.appendChild(input);
+
+        div.appendChild(document.createTextNode("End Index"));
+        var input = document.createElement("input");
+        input.type = "number";
+        input.name = "entityLabels[][endCharIndex]";
+        input.value = endPos;
+        div.appendChild(input);
+
+        var button = document.createElement("button");
+        button.innerHTML = "remove";
+        button.className = "removeButton";
+        button.type = "button";
+        button.onclick = function () {
+            //$(this).parent().css("background-color", "red");
+
+            $(this).parent().remove(); return false;
+        };
+        // 2. Append somewhere
+        div.appendChild(button);
+
+
+        //
+        // Append a line break 
+        container.appendChild(div);
+
+        container.appendChild(document.createElement("br"));
+
+    }
+
+
+    function objectifyForm(formArray) {//serialize data function
+
+        var returnArray = {};
+        var entityLabels = [];
+        var currentEntity = {};
+        for (var i = 0; i < formArray.length; i++) {
+
+            //console.log(formArray[i])
+            var splitName = formArray[i]["name"].split("[]");
+            if (splitName[0] == "entityLabels") {
+                var name = splitName[1].replace("[", "").replace("]", "");
+                currentEntity[name] = formArray[i]['value'];
+                console.log("current entity");
+                console.log(currentEntity);
+                if (Object.keys(currentEntity).length == 3) {
+                    entityLabels.push(currentEntity);
+                    currentEntity = {};
+                }
+
+            }
+            else {
+
+                returnArray[formArray[i]['name']] = formArray[i]['value'];
+
+            }
+            //console.log(formArray[i]["name"].split("[]")[0])
+
+        }
+        returnArray["entityLabels"] = entityLabels;
+        console.log(returnArray);
+        return returnArray;
+    }
+    function checkAnswer() {
+        //console.log("i've submitted something!");
+        //console.log($('#form1').serialize());
+
+        var data = JSON.stringify($("#form1").serializeArray());
+        console.log("form array");
+        console.log($("#form1").serializeArray()[0]);//  <-----------
+        var testdata = JSON.stringify(objectifyForm($("#form1").serializeArray()));
+        //"{ \"intentName\": \"None\",\"text\": null,\"entityLabels\": null}";
+        //console.log(testdata);
+        //console.log(data);
+        $.ajax({
+            //"http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis"
+            //"http://localhost:65007/api/UpdateLuis"
+            url: "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis",
+            type: "POST",
+            data: testdata,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function () {
+                var loc = jqxhr.getResponseHeader('Location');
+                var a = $('<a/>', { href: loc, text: loc });
+                $('#message').html(a);
+            },
+            error: function () {
+                $('#message').html("Error posting the update.");
+            }
+
+        });
+        //$location.url('/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"]);
+        window.location.href = '/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"];
+        //location = '/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"];
+        return false;
+
+    };
+    $(document).ready(function () {
+
+        //var checkAnswer = function () {
+        //    //console.log("i've submitted something!");
+        //    //console.log($('#form1').serialize());
+
+        //    var data = JSON.stringify($("#form1").serializeArray()); //  <-----------
+        //    var testdata = JSON.stringify(objectifyForm($("#form1").serializeArray()));
+        //        //"{ \"intentName\": \"None\",\"text\": null,\"entityLabels\": null}";
+        //    //console.log(testdata);
+        //    //console.log(data);
+        //    $.ajax({
+        //        //"http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis"
+        //        //"http://localhost:65007/api/UpdateLuis"
+        //        url: "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis",
+        //        type: "POST",
+        //        data: testdata,
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        success: function () {
+        //            var loc = jqxhr.getResponseHeader('Location');
+        //            var a = $('<a/>', { href: loc, text: loc });
+        //            $('#message').html(a);
+        //        },
+        //        error: function () {
+        //            $('#message').html("Error posting the update.");
+        //        }
+
+        //    });
+
+        //};
+    });
+     //var jqxhr = $.post('http://localhost:65007/api/UpdateLuis', $('#form1').serialize())
+     //    .success(function () {
+     //        var loc = jqxhr.getResponseHeader('Location');
+     //        var a = $('<a/>', { href: loc, text: loc });
+     //        $('#message').html(a);
+     //    })
+     //    .error(function () {
+     //        $('#message').html("Error posting the update.");
+     //    });
+     //return false;
     
 </script>
 <style>
