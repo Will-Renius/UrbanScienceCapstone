@@ -1,6 +1,8 @@
 ﻿<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
 
-<script  type="text/javascript">
+<script type="text/javascript">
+    var test = [];
+    //select text
     function ShowSelection() {
         var textComponent = document.getElementById('search');
         var selectedText;
@@ -18,7 +20,7 @@
 
         console.log("You selected: " + selectedText);
     }
-
+    // add form for entity
     function addFields() {
         var textComponent = document.getElementById('search');
         console.log(textComponent);
@@ -29,15 +31,14 @@
             startPos = textComponent.selectionStart;
             endPos = textComponent.selectionEnd;
             selectedText = textComponent.value.substring(startPos, endPos);
+            test.push(selectedText);
+            console.log(test);
         }
-        // Container <div> where dynamic content will be placed
         var container = document.getElementById("container");
-        // Clear previous contents of the container
-
-        //childElementCount can give number of child elements
-        // Create 
-        var div = document.createElement("div")
-        var entityOptions = ["Filter::Segment", "Filter::Brand", "Filter::Model"]
+ 
+        var div = document.createElement("div");
+        //var entityOptions = ["Filter::Segment", "Filter::Brand", "Filter::Model"]
+        var entityOptions = ["Filter"];
         div.appendChild(document.createTextNode("Entity Name"));
         var input = document.createElement("Select");
         input.name = "entityLabels[][entityName]";
@@ -75,16 +76,12 @@
         button.className = "removeButton";
         button.type = "button";
         button.onclick = function () {
-            //$(this).parent().css("background-color", "red");
 
             $(this).parent().remove(); return false;
         };
-        // 2. Append somewhere
         div.appendChild(button);
 
 
-        //
-        // Append a line break 
         container.appendChild(div);
 
         container.appendChild(document.createElement("br"));
@@ -99,13 +96,11 @@
         var currentEntity = {};
         for (var i = 0; i < formArray.length; i++) {
 
-            //console.log(formArray[i])
             var splitName = formArray[i]["name"].split("[]");
             if (splitName[0] == "entityLabels") {
                 var name = splitName[1].replace("[", "").replace("]", "");
                 currentEntity[name] = formArray[i]['value'];
-                console.log("current entity");
-                console.log(currentEntity);
+
                 if (Object.keys(currentEntity).length == 3) {
                     entityLabels.push(currentEntity);
                     currentEntity = {};
@@ -117,28 +112,22 @@
                 returnArray[formArray[i]['name']] = formArray[i]['value'];
 
             }
-            //console.log(formArray[i]["name"].split("[]")[0])
 
         }
         returnArray["entityLabels"] = entityLabels;
-        console.log(returnArray);
         return returnArray;
     }
     function checkAnswer() {
-        //console.log("i've submitted something!");
-        //console.log($('#form1').serialize());
+
 
         var data = JSON.stringify($("#form1").serializeArray());
-        console.log("form array");
-        console.log($("#form1").serializeArray()[0]);//  <-----------
+
         var testdata = JSON.stringify(objectifyForm($("#form1").serializeArray()));
-        //"{ \"intentName\": \"None\",\"text\": null,\"entityLabels\": null}";
-        //console.log(testdata);
-        //console.log(data);
+       
         $.ajax({
             //"http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis"
             //"http://localhost:65007/api/UpdateLuis"
-            url: "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis",
+            url: "https://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis",
             type: "POST",
             data: testdata,
             contentType: "application/json; charset=utf-8",
@@ -153,56 +142,19 @@
             }
 
         });
-        //$location.url('/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"]);
-        window.location.href = '/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"];
-        //location = '/Home/Kpi?search=' + $("#form1").serializeArray()[0]["value"];
+        window.location.href = '/Home/Kpi?search=' + test.join(" ") + " " + $("#form1").serializeArray()[0]["value"];
         return false;
 
     };
     $(document).ready(function () {
 
-        //var checkAnswer = function () {
-        //    //console.log("i've submitted something!");
-        //    //console.log($('#form1').serialize());
 
-        //    var data = JSON.stringify($("#form1").serializeArray()); //  <-----------
-        //    var testdata = JSON.stringify(objectifyForm($("#form1").serializeArray()));
-        //        //"{ \"intentName\": \"None\",\"text\": null,\"entityLabels\": null}";
-        //    //console.log(testdata);
-        //    //console.log(data);
-        //    $.ajax({
-        //        //"http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis"
-        //        //"http://localhost:65007/api/UpdateLuis"
-        //        url: "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/UpdateLuis",
-        //        type: "POST",
-        //        data: testdata,
-        //        contentType: "application/json; charset=utf-8",
-        //        dataType: "json",
-        //        success: function () {
-        //            var loc = jqxhr.getResponseHeader('Location');
-        //            var a = $('<a/>', { href: loc, text: loc });
-        //            $('#message').html(a);
-        //        },
-        //        error: function () {
-        //            $('#message').html("Error posting the update.");
-        //        }
-
-        //    });
-
-        //};
     });
-     //var jqxhr = $.post('http://localhost:65007/api/UpdateLuis', $('#form1').serialize())
-     //    .success(function () {
-     //        var loc = jqxhr.getResponseHeader('Location');
-     //        var a = $('<a/>', { href: loc, text: loc });
-     //        $('#message').html(a);
-     //    })
-     //    .error(function () {
-     //        $('#message').html("Error posting the update.");
-     //    });
-     //return false;
     
 </script>
+
+
+
 <style>
     .card{
         margin:auto;
@@ -398,16 +350,7 @@
         @*<a href="@Url.Action("Index", "Home")" class="btn btn-outline btn-info">Try Again</a>*@
     </center>
 
-    @*<div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Dropdown button
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="@Url.Action("Index", "UpdateLuisAndSearch", new { intent = "Dealer Sales" })">Dealer Sales</a>
-                <a class="dropdown-item" href="@Url.Action("Index", "UpdateLuisAndSearch", new { intent = "Insell" })">Insell</a>
-                <a class="dropdown-item" href="@Url.Action("Index", "UpdateLuisAndSearch", new { intent = "None" })">None</a>
-            </div>
-        </div>*@
+
         <form id="form1" onSubmit="return checkAnswer();" style="text-align:center;">
             <div>
                 <label for="intentName">Intent Name</label>
@@ -427,16 +370,10 @@
             </div>
             <div>
                 <div class="input-group">
-                    <input class="form-control" style="margin:auto;max-width:500px;" id="search" name="text" type="text" value="@ViewBag.search" />
+                    <input class="form-control" style="margin:auto;max-width:500px;" id="search" name="text" type="text" autocomplete="off" value="@ViewBag.search" />
 
                    
-                    @*<button type="button" id="startBtn" class="btn btn-success input-group-addon">
-                <i class="fa fa-microphone" aria-hidden="true"></i>
-            </button>
-            <button type="button" id="stopBtn" class="btn btn-danger input-group-addon">
-                <i class="fa fa-microphone-slash" aria-hidden="true"></i>
-            </button>*@
-                    @* <span class="input-group-addon">.00</span>*@
+                   
 
                 </div>
                
@@ -449,36 +386,7 @@
 
             </div>
         </form>
-        @*<div class="center" style="margin:auto">
-
-
-                @model UrbanScienceCapstone.Models.UpdateLuis
-                @{
-
-                    <form asp-controller="Home" asp-action="UpdateLuis" method="post" class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="alert-danger" asp-validation-summary="ModelOnly"></div>
-                                <div class="dropdown_class" style="min-width:200px;">
-                                    <input asp-for="Utterance" style="display:none" value="@ViewBag.search" />
-                                    <label asp-for="Name" class="control-label"></label>
-                                    <select asp-for="Name"
-                                            class="form-control"
-                                            asp-items="@(new SelectList(@ViewBag.ListOfIntents,"Name", "Name"))"></select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="submitter" style="margin:auto">
-                                    <input id="Submit1" type="submit" value="submit" />
-                                </div>
-                            </div>
-                        </div>
-
-                    </form>
-                }
-            </div>*@
+       
 
     </div>
 }

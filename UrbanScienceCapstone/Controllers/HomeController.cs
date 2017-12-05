@@ -29,14 +29,17 @@ namespace UrbanScienceCapstone.Controllers
     public class HomeController : Controller
     {
         //const string VDA_API_URL = "http://localhost:65007/api/";
+        //url for API
         const string VDA_API_URL = "http://msufall2017virtualdealershipadviserapi.azurewebsites.net/api/";
+
+        //variables for sessions
         const string SessionKeyDealerName = "_DealerName";
         const string SessionKeyUsername = "_Username";
         const string SessionKeyPassword = "_Password";
         const string SessionKeyFirstName = "_FirstName";
         const string SessionKeyLastName = "_LastName";
 
-
+        //login page
         public ActionResult Login(bool error)
         {
 
@@ -44,7 +47,7 @@ namespace UrbanScienceCapstone.Controllers
             return View();
         }
 
-        //If we make their dealerId persist through multiple sessions, might wanna have this as the default route
+        //verify valid information for login
         [HttpPost]
         public async Task<ActionResult> VerifyLogin(LoginInfo info)
         {
@@ -55,7 +58,6 @@ namespace UrbanScienceCapstone.Controllers
 
             if (ModelState.IsValid && !string.IsNullOrEmpty(info.dealerid) && !string.IsNullOrEmpty(info.password))
             {
-                //just copied code below calling needed kpis, definitely refactor
 
                 string url = $"{VDA_API_URL}/VerifyLogin?username={Uri.EscapeDataString(info.dealerid)}&password={Uri.EscapeDataString(info.password)}";
                 var client = new HttpClient();
@@ -104,8 +106,7 @@ namespace UrbanScienceCapstone.Controllers
         }
 
 
-        // GET: /<controller>/
-        //swtichted iactionresult to ation result, may want to switch back
+        //index page, displays search
         public ActionResult Index()
         {
             string dealer_name = HttpContext.Session.GetString(SessionKeyDealerName);
@@ -118,7 +119,7 @@ namespace UrbanScienceCapstone.Controllers
         }
 
 
-
+        //display KPI results page
         public async Task<ActionResult> KPI(string search)
         {
             List<Intent> intent_list = new List<Intent>
@@ -135,7 +136,6 @@ namespace UrbanScienceCapstone.Controllers
             ViewBag.search = search;
 
             //get the most related kpi
-            //string related_kpi_url = "http://localhost:65007/api/RelatedKpi";
             string dealer_name = HttpContext.Session.GetString(SessionKeyDealerName);
             string username = HttpContext.Session.GetString(SessionKeyUsername);
             string password = HttpContext.Session.GetString(SessionKeyPassword);
@@ -185,7 +185,6 @@ namespace UrbanScienceCapstone.Controllers
 
 
             // call web api to get action sending it kpi information
-            //string needed_kpi_api_url = "http://localhost:65007/api/NeededKpi";
             List<Kpi> most_needed_kpis = new List<Kpi>();
 
             
@@ -211,6 +210,8 @@ namespace UrbanScienceCapstone.Controllers
 
 
         }
+
+        //Display action result page
         public async Task<ActionResult> ActionResponse(string kpi_name, int kpi_value, double kpi_p_val)
         {
             string dealer_name = HttpContext.Session.GetString(SessionKeyDealerName);
@@ -219,10 +220,7 @@ namespace UrbanScienceCapstone.Controllers
 
             
 
-            //KpiList kpi_list_object = JsonConvert.DeserializeObject<KpiList>(TempData["kpi_list"].ToString());
 
-            // call web api to get action sending it kpi information
-            //string action_api_url = "http://localhost:65007/api/Actions";
             List<KpiAction> actions_to_take = new List<KpiAction>();
 
             string url = $"{VDA_API_URL}/Actions?name={Uri.EscapeDataString(kpi_name)}&value={kpi_p_val}";
@@ -254,35 +252,6 @@ namespace UrbanScienceCapstone.Controllers
 
 
         }
-        //[HttpPost]
-        //public async Task<ActionResult> UpdateLuis(UpdateLuis update_object)
-        //{
-        //    //string update_luis_url = "http://localhost:65007/api/UpdateLuis";
-        //    List<Kpi> most_needed_kpis = new List<Kpi>();
-
-        //    try
-        //    {
-
-        //        string url = $"{VDA_API_URL}/UpdateLuis?intent={Uri.EscapeDataString(name)}&utterance={Uri.EscapeDataString(utterance)}";
-        //        var client = new HttpClient();
-
-        //        client.DefaultRequestHeaders.Accept.Clear();
-        //        //add any default headers below this
-        //        client.DefaultRequestHeaders.Accept.Add(
-        //            new MediaTypeWithQualityHeaderValue("application/json"));
-
-        //        HttpResponseMessage response = await client.GetAsync(url);
-        //        string json_string = await response.Content.ReadAsStringAsync();
-                
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e.Message);
-
-        //    }
-        //    return RedirectToAction("KPI", "Home", new { search = name });
-
-
-        //}
+       
     }
 }
