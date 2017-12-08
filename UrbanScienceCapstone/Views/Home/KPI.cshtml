@@ -37,6 +37,7 @@
         var container = document.getElementById("container");
  
         var div = document.createElement("div");
+        var div2 = document.createElement("div");
         //var entityOptions = ["Filter::Segment", "Filter::Brand", "Filter::Model"]
         var entityOptions = ["Filter"];
         div.appendChild(document.createTextNode("Entity Name"));
@@ -71,6 +72,10 @@
         input.value = endPos;
         div.appendChild(input);
 
+        div.style.display = "none";
+        div2.appendChild(document.createTextNode("Filter: " + selectedText));
+
+        
         var button = document.createElement("button");
         button.innerHTML = "remove";
         button.className = "removeButton";
@@ -79,10 +84,11 @@
 
             $(this).parent().remove(); return false;
         };
-        div.appendChild(button);
+        div2.appendChild(button);
 
 
         container.appendChild(div);
+        container.appendChild(div2);
 
         container.appendChild(document.createElement("br"));
 
@@ -156,8 +162,10 @@
 
 
 <style>
-    .card{
-        margin:auto;
+    .removeButton{
+        margin: 2px 10px;
+    } .card {
+        margin: auto;
     }
     .needed-section {
         background-color: #E6DED3;
@@ -378,10 +386,11 @@
                 </div>
                
             </div>
-            <div>
-                <input  class="btn btn-outline btn-info" type="submit" value="Submit" />
+            <div style="margin:10px;">
+                <input class="btn btn-outline btn-info" style="margin:2px 10px" type="submit" value="Submit" />
+
+                <a class="btn btn-outline btn-info" style="margin:2px 10px" id="filldetails" onclick="addFields()">Add Filter</a>
             </div>
-            <a class="btn btn-outline btn-info" id="filldetails" onclick="addFields()">Add Entity</a>
             <div id="container">
 
             </div>
